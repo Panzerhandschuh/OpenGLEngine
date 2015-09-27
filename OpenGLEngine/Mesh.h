@@ -3,7 +3,7 @@
 
 #define GLEW_STATIC
 
-#include <GL\glew.h>
+#include <GL/glew.h>
 #include "Image.h"
 
 class Mesh

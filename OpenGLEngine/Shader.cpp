@@ -46,16 +46,22 @@ void Shader::Use()
 	glUseProgram(program);
 }
 
-void Shader::SetAttribute(const char* uniformName, GLfloat v0, GLfloat v1, GLfloat v2)
+void Shader::SetUniform(const char* uniformName, GLfloat v0, GLfloat v1, GLfloat v2)
 {
-	GLint location = glGetUniformLocation(program, uniformName);
-	glUniform3f(location, v0, v1, v2);
+	GLint loc = glGetUniformLocation(program, uniformName);
+	glUniform3f(loc, v0, v1, v2);
 }
 
-void Shader::SetAttribute(const char* uniformName, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3)
+void Shader::SetUniform(const char* uniformName, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3)
 {
-	GLint location = glGetUniformLocation(program, uniformName);
-	glUniform4f(location, v0, v1, v2, v3);
+	GLint loc = glGetUniformLocation(program, uniformName);
+	glUniform4f(loc, v0, v1, v2, v3);
+}
+
+void Shader::SetUniform(const char* uniformName, const glm::mat4& mat)
+{
+	GLuint loc = glGetUniformLocation(program, uniformName);
+	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
 }
 
 GLuint Shader::CreateShader(const char* filePath, GLenum shaderType)
