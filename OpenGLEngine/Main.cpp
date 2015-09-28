@@ -6,13 +6,22 @@
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
+#include "Camera.h"
 #include "Mesh.h"
 #include "Shader.h"
 
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
+void UpdateCamera();
 
-const GLuint SCREEN_WIDTH = 800;
-const GLuint SCREEN_HEIGHT = 600;
+GLuint screenWidth = 800;
+GLuint screenHeight = 600;
+
+GLfloat deltaTime = 0.0f;
+GLfloat lastFrame = 0.0f;
+
+Camera camera;
+
+bool keys[1024];
 
 int main()
 {
@@ -25,7 +34,7 @@ int main()
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 	// Create window
-	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL Tutorial", 0, 0);
+	GLFWwindow* window = glfwCreateWindow(screenWidth, screenHeight, "OpenGL Tutorial", 0, 0);
 	if (!window)
 	{
 		std::cerr << "Failed to create GLFW window" << std::endl;
@@ -97,6 +106,9 @@ int main()
 		1.0f, 1.0f, 1.0f
 	};
 
+	// Initialize camera
+	camera.position = glm::vec3(0.0f, 2.0f, 3.0f);
+
 	// Create triangle geometry
 	Mesh mesh;
 	mesh.SetVertices(verts, 8);
@@ -110,32 +122,36 @@ int main()
 
 	while (!glfwWindowShouldClose(window))
 	{
+		// Get frame time
+		GLfloat currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
 		// Check for keyboard/mouse input
 		glfwPollEvents();
 
 		// Render settings
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
+		// Update camera
+		UpdateCamera();
+
 		// Create model matrix
 		glm::mat4 model;
-		model = glm::rotate(model, glm::quarter_pi<float>(), glm::vec3(0.5f, 1.0f, 0.0f));
-		glm::mat4 view;
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+		//model = glm::rotate(model, glm::quarter_pi<GLfloat>(), glm::vec3(0.5f, 1.0f, 0.0f));
 		glm::mat4 projection;
-		projection = glm::perspective(glm::quarter_pi<float>(), (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 100.0f);
+		projection = glm::perspective(glm::quarter_pi<GLfloat>(), (GLfloat)screenWidth / (GLfloat)screenHeight, 0.1f, 100.0f);
 
 		// Draw triangle
 		shader.Use();
 		shader.SetUniform("model", model);
-		shader.SetUniform("view", view);
+		shader.SetUniform("view", camera.view);
 		shader.SetUniform("projection", projection);
 		mesh.Draw();
 
 		// Draw output onto the window
 		glfwSwapBuffers(window);
 	}
-
-	//glDeleteProgram(program);
 
 	glfwTerminate();
 	return 0;
@@ -146,4 +162,33 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 	// Close the window when the user presses escape
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
+
+	// Track keyboard input
+	if (key >= 0 && key < 1024)
+	{
+		if (action == GLFW_PRESS)
+			keys[key] = true;
+		else if (action == GLFW_RELEASE)
+			keys[key] = false;
+	}
+}
+
+void UpdateCamera()
+{
+	const GLfloat camSpeed = 8.0f;
+
+	if (keys[GLFW_KEY_W])
+		camera.position += camSpeed * -camera.GetForward() * deltaTime;
+	if (keys[GLFW_KEY_S])
+		camera.position += camSpeed * camera.GetForward() * deltaTime;
+	if (keys[GLFW_KEY_A])
+		camera.position += camSpeed * -camera.GetRight() * deltaTime;
+	if (keys[GLFW_KEY_D])
+		camera.position += camSpeed * camera.GetRight() * deltaTime;
+	if (keys[GLFW_KEY_Q])
+		camera.position += camSpeed * -camera.GetUp() * deltaTime;
+	if (keys[GLFW_KEY_E])
+		camera.position += camSpeed * camera.GetUp() * deltaTime;
+
+	camera.LookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 }
