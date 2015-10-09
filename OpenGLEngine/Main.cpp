@@ -62,48 +62,132 @@ int main()
 		-0.5f, -0.5f, -0.5f,
 		0.5f, -0.5f, -0.5f,
 		0.5f, 0.5f, -0.5f,
+		0.5f, 0.5f, -0.5f,
 		-0.5f, 0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+
 		-0.5f, -0.5f, 0.5f,
 		0.5f, -0.5f, 0.5f,
 		0.5f, 0.5f, 0.5f,
-		-0.5f, 0.5f, 0.5f
-	};
+		0.5f, 0.5f, 0.5f,
+		-0.5f, 0.5f, 0.5f,
+		-0.5f, -0.5f, 0.5f,
 
-	GLuint indices[] = {
-		0, 3, 2,
-		2, 1, 0,
-		4, 5, 6,
-		6, 7, 4,
-		7, 3, 0,
-		0, 4, 7,
-		6, 5, 1,
-		1, 2, 6,
-		0, 1, 5,
-		5, 4, 0,
-		6, 2, 3,
-		3, 7, 6
+		-0.5f, 0.5f, 0.5f,
+		-0.5f, 0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f, 0.5f,
+		-0.5f, 0.5f, 0.5f,
+
+		0.5f, 0.5f, 0.5f,
+		0.5f, 0.5f, -0.5f,
+		0.5f, -0.5f, -0.5f,
+		0.5f, -0.5f, -0.5f,
+		0.5f, -0.5f, 0.5f,
+		0.5f, 0.5f, 0.5f,
+
+		-0.5f, -0.5f, -0.5f,
+		0.5f, -0.5f, -0.5f,
+		0.5f, -0.5f, 0.5f,
+		0.5f, -0.5f, 0.5f,
+		-0.5f, -0.5f, 0.5f,
+		-0.5f, -0.5f, -0.5f,
+
+		-0.5f, 0.5f, -0.5f,
+		0.5f, 0.5f, -0.5f,
+		0.5f, 0.5f, 0.5f,
+		0.5f, 0.5f, 0.5f,
+		-0.5f, 0.5f, 0.5f,
+		-0.5f, 0.5f, -0.5f,
 	};
 
 	GLfloat texCoords[] = {
 		0.0f, 0.0f,
 		1.0f, 0.0f,
 		1.0f, 1.0f,
+		1.0f, 1.0f,
 		0.0f, 1.0f,
+		0.0f, 0.0f,
+
 		0.0f, 0.0f,
 		1.0f, 0.0f,
 		1.0f, 1.0f,
+		1.0f, 1.0f,
+		0.0f, 1.0f,
+		0.0f, 0.0f,
+
+		1.0f, 0.0f,
+		1.0f, 1.0f,
+		0.0f, 1.0f,
+		0.0f, 1.0f,
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+
+		1.0f, 0.0f,
+		1.0f, 1.0f,
+		0.0f, 1.0f,
+		0.0f, 1.0f,
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+
+		0.0f, 1.0f,
+		1.0f, 1.0f,
+		1.0f, 0.0f,
+		1.0f, 0.0f,
+		0.0f, 0.0f,
+		0.0f, 1.0f,
+
+		0.0f, 1.0f,
+		1.0f, 1.0f,
+		1.0f, 0.0f,
+		1.0f, 0.0f,
+		0.0f, 0.0f,
 		0.0f, 1.0f
 	};
 
-	GLfloat colors[] = {
-		1.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
+	GLfloat normals[] = {
+		0.0f, 0.0f, -1.0f,
+		0.0f, 0.0f, -1.0f,
+		0.0f, 0.0f, -1.0f,
+		0.0f, 0.0f, -1.0f,
+		0.0f, 0.0f, -1.0f,
+		0.0f, 0.0f, -1.0f,
+
 		0.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
 		0.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 1.0f
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f,
+
+		-1.0f, 0.0f, 0.0f,
+		-1.0f, 0.0f, 0.0f,
+		-1.0f, 0.0f, 0.0f,
+		-1.0f, 0.0f, 0.0f,
+		-1.0f, 0.0f, 0.0f,
+		-1.0f, 0.0f, 0.0f,
+
+		1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+
+		0.0f, -1.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
+
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f
 	};
 
 	// Initialize camera
@@ -111,19 +195,20 @@ int main()
 
 	// Create triangle geometry
 	Mesh mesh;
-	mesh.SetVertices(verts, 8);
-	mesh.SetIndices(indices, 36);
-	mesh.SetTexCoords(texCoords, 8);
+	mesh.SetVertices(verts, 36);
+	//mesh.SetIndices(indices, 36);
+	mesh.SetNormals(normals, 36);
+	mesh.SetTexCoords(texCoords, 36);
 	mesh.SetTexture("container.jpg");
-	mesh.SetVertexColors(colors, 8);
+	//mesh.SetVertexColors(colors, 8);
 
 	// Create shader
-	Shader shader("vert.glsl", "frag.glsl");
+	Shader shader("lit-vert.glsl", "lit-frag.glsl");
 
 	while (!glfwWindowShouldClose(window))
 	{
 		// Get frame time
-		GLfloat currentFrame = glfwGetTime();
+		GLfloat currentFrame = (GLfloat)glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
@@ -147,6 +232,10 @@ int main()
 		shader.SetUniform("model", model);
 		shader.SetUniform("view", camera.view);
 		shader.SetUniform("projection", projection);
+		shader.SetUniform("objectColor", 1.0f, 1.0f, 1.0f);
+		shader.SetUniform("ambient", 0.1f, 0.1f, 0.1f);
+		shader.SetUniform("lightColor", 1.0f, 1.0f, 1.0f);
+		shader.SetUniform("lightDir", 1.0f, 1.0f, 1.0f);
 		mesh.Draw();
 
 		// Draw output onto the window

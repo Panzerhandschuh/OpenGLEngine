@@ -64,5 +64,11 @@
     <None Include="vert.glsl">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="lit-vert.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="lit-frag.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

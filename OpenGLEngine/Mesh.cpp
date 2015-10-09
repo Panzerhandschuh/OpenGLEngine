@@ -56,6 +56,25 @@ void Mesh::SetIndices(GLuint indices[], int numIndices)
 	glBindVertexArray(0); // Unbind vao
 }
 
+void Mesh::SetNormals(GLfloat normals[], int numNormals)
+{
+	this->numNormals = numNormals;
+
+	glGenBuffers(1, &vboNormals);
+
+	glBindVertexArray(vao); // Bind vao
+	glBindBuffer(GL_ARRAY_BUFFER, vboNormals); // Bind vbo
+
+	glBufferData(GL_ARRAY_BUFFER, numNormals * 3 * sizeof(GLfloat), normals, GL_STATIC_DRAW); // Set the normals that vbo should use
+
+	// Shader attributes
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0); // Configure vertex attribute
+	glEnableVertexAttribArray(1); // Enable vertex attribute 1 to be used by vertex shader
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind vbo
+	glBindVertexArray(0); // Unbind vao
+}
+
 void Mesh::SetTexCoords(GLfloat texCoords[], int numTexCoords)
 {
 	this->numTexCoords = numTexCoords;
@@ -113,8 +132,8 @@ void Mesh::SetVertexColors(GLfloat colors[], int numColors)
 	glBufferData(GL_ARRAY_BUFFER, numColors * 3 * sizeof(GLfloat), colors, GL_STATIC_DRAW); // Set the vertices that vbo should use
 
 	// Shader attributes
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0); // Configure vertex color attribute
-	glEnableVertexAttribArray(1); // Enable vertex attribute 1 to be used by vertex shader
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, 0); // Configure vertex color attribute
+	glEnableVertexAttribArray(3); // Enable vertex attribute 3 to be used by vertex shader
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind vbo
 	glBindVertexArray(0); // Unbind vao

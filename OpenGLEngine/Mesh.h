@@ -13,6 +13,7 @@ public:
 	~Mesh();
 	void SetVertices(GLfloat verts[], int numVerts);
 	void SetIndices(GLuint indices[], int numIndices);
+	void SetNormals(GLfloat normals[], int numNormals);
 	void SetTexCoords(GLfloat texCoords[], int numTexCoords);
 	void SetTexture(const char* imgFile);
 	void SetVertexColors(GLfloat colors[], int numColors);
@@ -20,8 +21,8 @@ public:
 	void Draw(GLenum mode);
 
 private:
-	int numVerts, numTexCoords, numColors, numIndices;
-	GLuint vao, vboVerts, vboTexCoords, vboColors, ebo, texture;
+	int numVerts, numIndices, numNormals, numTexCoords, numColors;
+	GLuint vao, ebo, vboVerts, vboNormals, vboTexCoords, vboColors, texture;
 };
 
 #endif
