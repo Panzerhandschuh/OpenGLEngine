@@ -3,7 +3,7 @@
 //in vec3 vertColor;
 in vec3 fragPos;
 in vec3 normal;
-in vec2 texCoord;
+//in vec2 texCoord;
 
 out vec4 color;
 
@@ -20,5 +20,6 @@ void main()
 	vec3 diffuse = diff * lightColor;
 
 	vec3 result = (ambient + diffuse) * objectColor;
-	color = texture(_texture, texCoord) * vec4(result, 1.0);
+	//color = texture(_texture, texCoord) * vec4(result, 1.0);
+	color = vec4(result, 1.0);
 }

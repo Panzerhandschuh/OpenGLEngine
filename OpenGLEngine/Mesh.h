@@ -3,6 +3,7 @@
 
 #define GLEW_STATIC
 
+#include <glm/glm.hpp>
 #include <GL/glew.h>
 #include "Image.h"
 
@@ -12,8 +13,10 @@ public:
 	Mesh();
 	~Mesh();
 	void SetVertices(GLfloat verts[], int numVerts);
+	void SetVertices(glm::vec3 verts[], int numVerts);
 	void SetIndices(GLuint indices[], int numIndices);
 	void SetNormals(GLfloat normals[], int numNormals);
+	void SetNormals(glm::vec3 normals[], int numNormals);
 	void SetTexCoords(GLfloat texCoords[], int numTexCoords);
 	void SetTexture(const char* imgFile);
 	void SetVertexColors(GLfloat colors[], int numColors);

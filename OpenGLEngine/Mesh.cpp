@@ -41,6 +41,25 @@ void Mesh::SetVertices(GLfloat verts[], int numVerts)
 	glBindVertexArray(0); // Unbind vao
 }
 
+void Mesh::SetVertices(glm::vec3 verts[], int numVerts)
+{
+	this->numVerts = numVerts;
+
+	glGenBuffers(1, &vboVerts);
+
+	glBindVertexArray(vao); // Bind vao
+	glBindBuffer(GL_ARRAY_BUFFER, vboVerts); // Bind vbo
+
+	glBufferData(GL_ARRAY_BUFFER, numVerts * sizeof(glm::vec3), verts, GL_STATIC_DRAW); // Set the vertices that vbo should use
+
+	// Shader attributes
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0); // Configure vertex attribute
+	glEnableVertexAttribArray(0); // Enable vertex attribute 0 to be used by vertex shader
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind vbo
+	glBindVertexArray(0); // Unbind vao
+}
+
 void Mesh::SetIndices(GLuint indices[], int numIndices)
 {
 	this->numIndices = numIndices;
@@ -66,6 +85,25 @@ void Mesh::SetNormals(GLfloat normals[], int numNormals)
 	glBindBuffer(GL_ARRAY_BUFFER, vboNormals); // Bind vbo
 
 	glBufferData(GL_ARRAY_BUFFER, numNormals * 3 * sizeof(GLfloat), normals, GL_STATIC_DRAW); // Set the normals that vbo should use
+
+	// Shader attributes
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0); // Configure vertex attribute
+	glEnableVertexAttribArray(1); // Enable vertex attribute 1 to be used by vertex shader
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind vbo
+	glBindVertexArray(0); // Unbind vao
+}
+
+void Mesh::SetNormals(glm::vec3 normals[], int numNormals)
+{
+	this->numNormals = numNormals;
+
+	glGenBuffers(1, &vboNormals);
+
+	glBindVertexArray(vao); // Bind vao
+	glBindBuffer(GL_ARRAY_BUFFER, vboNormals); // Bind vbo
+
+	glBufferData(GL_ARRAY_BUFFER, numNormals * sizeof(glm::vec3), normals, GL_STATIC_DRAW); // Set the normals that vbo should use
 
 	// Shader attributes
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0); // Configure vertex attribute
