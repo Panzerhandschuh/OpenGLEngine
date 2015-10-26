@@ -9,20 +9,13 @@
 #include "Camera.h"
 #include "Mesh.h"
 #include "Shader.h"
-#include "BezierCurve.h"
-
-void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
-void UpdateCamera();
+#include "BezierMesh.h"
 
 GLuint screenWidth = 800;
 GLuint screenHeight = 600;
-
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
-
 Camera camera;
-
-bool keys[1024];
 
 int main()
 {
@@ -43,6 +36,7 @@ int main()
 		return 1;
 	}
 	glfwMakeContextCurrent(window);
+	glfwSwapInterval(0); // Disable vsync
 
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK)
@@ -51,8 +45,7 @@ int main()
 		return 1;
 	}
 
-	// Input callbacks
-	glfwSetKeyCallback(window, KeyCallback);
+	InputManager::Init(window);
 
 	// OpenGL options
 	//glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -194,50 +187,21 @@ int main()
 	// Initialize camera
 	camera.position = glm::vec3(0.0f, 2.0f, 3.0f);
 
-	// Create bezier mesh
-	BezierCurve curve(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(4.0f, 0.0f, 0.0f), glm::vec3(4.0f, 0.0f, -4.0f), glm::vec3(8.0f, 0.0f, -4.0f));
-	const int numSegments = 20;
-	const int numSlices = numSegments + 1;
-	const int numVerts = 2 * numSlices;
-	glm::vec3 bVerts[numVerts], bNorms[numVerts];
-	for (int i = 0; i <= numSegments; i++)
-	{
-		float t = (float)i / (float)numSegments;
-		glm::vec3 point = curve.GetPoint(t);
-		glm::vec3 tang = glm::normalize(curve.GetTangent(t));
-		glm::vec3 norm(0.0f, 1.0f, 0.0f);
-		glm::vec3 biNorm = glm::cross(tang, norm);
-		//std::cout << biNorm.x << ", " << biNorm.y << ", " << biNorm.z << std::endl;
-
-		int index = i * 2; // Starting index of this slice
-		bVerts[index] = point + biNorm;
-		bVerts[index + 1] = point - biNorm;
-		bNorms[index] = norm;
-		bNorms[index + 1] = norm;
-	}
-
-	// Set up indices
-	const int numIndices = 6 * numSegments;
-	GLuint bIndices[numIndices];
-	for (int i = 0; i < numSegments; i++)
-	{
-		int tIndex = i * 6; // Starting triangle index of this segment
-		int vIndex = i * 2; // Starting vertex index of this segment
-
-		bIndices[tIndex] = vIndex;
-		bIndices[tIndex + 1] = vIndex + 1;
-		bIndices[tIndex + 2] = vIndex + 2;
-
-		bIndices[tIndex + 3] = vIndex + 1;
-		bIndices[tIndex + 4] = vIndex + 3;
-		bIndices[tIndex + 5] = vIndex + 2;
-	}
+	// Create bezier meshes
+	BezierCurve curve1(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(4.0f, 0.0f, 0.0f), glm::vec3(4.0f, 0.0f, -4.0f), glm::vec3(8.0f, 0.0f, -4.0f));
+	BezierMesh bMesh1(curve1);
+	BezierCurve curve2(glm::vec3(8.0f, 0.0f, -4.0f), glm::vec3(10.0f, 0.0f, -4.0f), glm::vec3(12.0f, 0.0f, -6.0f), glm::vec3(12.0f, 0.0f, -8.0f));
+	BezierMesh bMesh2(curve2);
+	BezierCurve curve3(glm::vec3(12.0f, 0.0f, -8.0f), glm::vec3(12.0f, 0.0f, -16.0f), glm::vec3(4.0f, 0.0f, -6.0f), glm::vec3(0.0f, 0.0f, -6.0f));
+	BezierMesh bMesh3(curve3);
+	BezierCurve curve4(glm::vec3(0.0f, 0.0f, -6.0f), glm::vec3(-6.0f, 0.0f, -6.0f), glm::vec3(-6.0f, 0.0f, 0), glm::vec3(0.0f, 0.0f, 0.0f));
+	BezierMesh bMesh4(curve4);
 
 	// Create triangle geometry
-	Mesh mesh;
-	mesh.SetVertices(bVerts, numVerts);
-	mesh.SetIndices(bIndices, numIndices);
-	mesh.SetNormals(bNorms, numVerts);
+	//Mesh mesh;
+	//mesh.SetVertices(bVerts, numVerts);
+	//mesh.SetIndices(bIndices, numIndices);
+	//mesh.SetNormals(bNorms, numVerts);
 	//mesh.SetTexCoords(texCoords, 36);
 	//mesh.SetTexture("container.jpg");
 	//mesh.SetVertexColors(colors, 8);
@@ -252,14 +216,14 @@ int main()
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		// Check for keyboard/mouse input
-		glfwPollEvents();
+		// Update keyboard/mouse input
+		InputManager::Update();
 
 		// Render settings
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// Update camera
-		UpdateCamera();
+		camera.Update(deltaTime);
 
 		// Create model matrix
 		glm::mat4 model;
@@ -276,7 +240,10 @@ int main()
 		shader.SetUniform("ambient", 0.1f, 0.1f, 0.1f);
 		shader.SetUniform("lightColor", 1.0f, 1.0f, 1.0f);
 		shader.SetUniform("lightDir", 1.0f, 1.0f, 1.0f);
-		mesh.Draw();
+		bMesh1.mesh.Draw();
+		bMesh2.mesh.Draw();
+		bMesh3.mesh.Draw();
+		bMesh4.mesh.Draw();
 
 		// Draw output onto the window
 		glfwSwapBuffers(window);
@@ -284,40 +251,4 @@ int main()
 
 	glfwTerminate();
 	return 0;
-}
-
-void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
-{
-	// Close the window when the user presses escape
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
-
-	// Track keyboard input
-	if (key >= 0 && key < 1024)
-	{
-		if (action == GLFW_PRESS)
-			keys[key] = true;
-		else if (action == GLFW_RELEASE)
-			keys[key] = false;
-	}
-}
-
-void UpdateCamera()
-{
-	const GLfloat camSpeed = 8.0f;
-
-	if (keys[GLFW_KEY_W])
-		camera.position += camSpeed * -camera.GetForward() * deltaTime;
-	if (keys[GLFW_KEY_S])
-		camera.position += camSpeed * camera.GetForward() * deltaTime;
-	if (keys[GLFW_KEY_A])
-		camera.position += camSpeed * -camera.GetRight() * deltaTime;
-	if (keys[GLFW_KEY_D])
-		camera.position += camSpeed * camera.GetRight() * deltaTime;
-	if (keys[GLFW_KEY_Q])
-		camera.position += camSpeed * -camera.GetUp() * deltaTime;
-	if (keys[GLFW_KEY_E])
-		camera.position += camSpeed * camera.GetUp() * deltaTime;
-
-	camera.LookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 }

@@ -69,18 +69,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BezierCurve.cpp" />
+    <ClCompile Include="BezierMesh.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="FileUtil.cpp" />
     <ClCompile Include="Image.cpp" />
+    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BezierCurve.h" />
+    <ClInclude Include="BezierMesh.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="FileUtil.h" />
     <ClInclude Include="Image.h" />
+    <ClInclude Include="InputManager.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
