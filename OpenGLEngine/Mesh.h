@@ -3,29 +3,35 @@
 
 #define GLEW_STATIC
 
+#include <vector>
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 #include "Image.h"
 
+using namespace std;
+
 class Mesh
 {
 public:
+	GLenum drawMode = GL_TRIANGLES;
+	vector<glm::vec3> vertices;
+	vector<glm::vec3> normals;
+	vector<glm::vec2> uvs;
+	vector<glm::vec3> colors;
+	vector<GLuint> indices;
+
 	Mesh();
 	~Mesh();
-	void SetVertices(GLfloat verts[], int numVerts);
-	void SetVertices(glm::vec3 verts[], int numVerts);
-	void SetIndices(GLuint indices[], int numIndices);
-	void SetNormals(GLfloat normals[], int numNormals);
-	void SetNormals(glm::vec3 normals[], int numNormals);
-	void SetTexCoords(GLfloat texCoords[], int numTexCoords);
+	void SetVertices(vector<glm::vec3> verts);
+	void SetNormals(vector<glm::vec3> normals);
+	void SetUvs(vector<glm::vec2> uvs);
+	void SetVertexColors(vector<glm::vec3> colors);
+	void SetIndices(vector<GLuint> indices);
 	void SetTexture(const char* imgFile);
-	void SetVertexColors(GLfloat colors[], int numColors);
 	void Draw();
-	void Draw(GLenum mode);
 
 private:
-	int numVerts, numIndices, numNormals, numTexCoords, numColors;
-	GLuint vao, ebo, vboVerts, vboNormals, vboTexCoords, vboColors, texture;
+	GLuint vao, ebo, vboVerts, vboNormals, vboUvs, vboColors, texture;
 };
 
 #endif

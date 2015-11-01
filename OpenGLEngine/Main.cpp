@@ -7,14 +7,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include "Camera.h"
-#include "Mesh.h"
+#include "Model.h"
 #include "Shader.h"
 #include "BezierMesh.h"
 
 GLuint screenWidth = 800;
 GLuint screenHeight = 600;
-GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
+GLfloat deltaTime = 0.0f;
 Camera camera;
 
 int main()
@@ -52,138 +52,6 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-	GLfloat verts[] = {
-		-0.5f, -0.5f, -0.5f,
-		0.5f, -0.5f, -0.5f,
-		0.5f, 0.5f, -0.5f,
-		0.5f, 0.5f, -0.5f,
-		-0.5f, 0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
-
-		-0.5f, -0.5f, 0.5f,
-		0.5f, -0.5f, 0.5f,
-		0.5f, 0.5f, 0.5f,
-		0.5f, 0.5f, 0.5f,
-		-0.5f, 0.5f, 0.5f,
-		-0.5f, -0.5f, 0.5f,
-
-		-0.5f, 0.5f, 0.5f,
-		-0.5f, 0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
-		-0.5f, -0.5f, 0.5f,
-		-0.5f, 0.5f, 0.5f,
-
-		0.5f, 0.5f, 0.5f,
-		0.5f, 0.5f, -0.5f,
-		0.5f, -0.5f, -0.5f,
-		0.5f, -0.5f, -0.5f,
-		0.5f, -0.5f, 0.5f,
-		0.5f, 0.5f, 0.5f,
-
-		-0.5f, -0.5f, -0.5f,
-		0.5f, -0.5f, -0.5f,
-		0.5f, -0.5f, 0.5f,
-		0.5f, -0.5f, 0.5f,
-		-0.5f, -0.5f, 0.5f,
-		-0.5f, -0.5f, -0.5f,
-
-		-0.5f, 0.5f, -0.5f,
-		0.5f, 0.5f, -0.5f,
-		0.5f, 0.5f, 0.5f,
-		0.5f, 0.5f, 0.5f,
-		-0.5f, 0.5f, 0.5f,
-		-0.5f, 0.5f, -0.5f,
-	};
-
-	GLfloat texCoords[] = {
-		0.0f, 0.0f,
-		1.0f, 0.0f,
-		1.0f, 1.0f,
-		1.0f, 1.0f,
-		0.0f, 1.0f,
-		0.0f, 0.0f,
-
-		0.0f, 0.0f,
-		1.0f, 0.0f,
-		1.0f, 1.0f,
-		1.0f, 1.0f,
-		0.0f, 1.0f,
-		0.0f, 0.0f,
-
-		1.0f, 0.0f,
-		1.0f, 1.0f,
-		0.0f, 1.0f,
-		0.0f, 1.0f,
-		0.0f, 0.0f,
-		1.0f, 0.0f,
-
-		1.0f, 0.0f,
-		1.0f, 1.0f,
-		0.0f, 1.0f,
-		0.0f, 1.0f,
-		0.0f, 0.0f,
-		1.0f, 0.0f,
-
-		0.0f, 1.0f,
-		1.0f, 1.0f,
-		1.0f, 0.0f,
-		1.0f, 0.0f,
-		0.0f, 0.0f,
-		0.0f, 1.0f,
-
-		0.0f, 1.0f,
-		1.0f, 1.0f,
-		1.0f, 0.0f,
-		1.0f, 0.0f,
-		0.0f, 0.0f,
-		0.0f, 1.0f
-	};
-
-	GLfloat normals[] = {
-		0.0f, 0.0f, -1.0f,
-		0.0f, 0.0f, -1.0f,
-		0.0f, 0.0f, -1.0f,
-		0.0f, 0.0f, -1.0f,
-		0.0f, 0.0f, -1.0f,
-		0.0f, 0.0f, -1.0f,
-
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-
-		-1.0f, 0.0f, 0.0f,
-		-1.0f, 0.0f, 0.0f,
-		-1.0f, 0.0f, 0.0f,
-		-1.0f, 0.0f, 0.0f,
-		-1.0f, 0.0f, 0.0f,
-		-1.0f, 0.0f, 0.0f,
-
-		1.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-
-		0.0f, -1.0f, 0.0f,
-		0.0f, -1.0f, 0.0f,
-		0.0f, -1.0f, 0.0f,
-		0.0f, -1.0f, 0.0f,
-		0.0f, -1.0f, 0.0f,
-		0.0f, -1.0f, 0.0f,
-
-		0.0f, 1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f
-	};
-
 	// Initialize camera
 	camera.position = glm::vec3(0.0f, 2.0f, 3.0f);
 
@@ -197,14 +65,11 @@ int main()
 	BezierCurve curve4(glm::vec3(0.0f, 0.0f, -6.0f), glm::vec3(-6.0f, 0.0f, -6.0f), glm::vec3(-6.0f, 0.0f, 0), glm::vec3(0.0f, 0.0f, 0.0f));
 	BezierMesh bMesh4(curve4);
 
-	// Create triangle geometry
-	//Mesh mesh;
-	//mesh.SetVertices(bVerts, numVerts);
-	//mesh.SetIndices(bIndices, numIndices);
-	//mesh.SetNormals(bNorms, numVerts);
-	//mesh.SetTexCoords(texCoords, 36);
-	//mesh.SetTexture("container.jpg");
-	//mesh.SetVertexColors(colors, 8);
+	// Create model
+	Model monkey("suzanne.obj");
+
+	// Draw in wireframe
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// Create shader
 	Shader shader("lit-vert.glsl", "lit-frag.glsl");
@@ -223,15 +88,17 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// Update camera
+		//camera.LookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 		camera.Update(deltaTime);
 
 		// Create model matrix
 		glm::mat4 model;
+		//model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 		//model = glm::rotate(model, glm::quarter_pi<GLfloat>(), glm::vec3(0.5f, 1.0f, 0.0f));
 		glm::mat4 projection;
-		projection = glm::perspective(glm::quarter_pi<GLfloat>(), (GLfloat)screenWidth / (GLfloat)screenHeight, 0.1f, 100.0f);
+		projection = glm::perspective(glm::quarter_pi<GLfloat>(), (GLfloat)screenWidth / (GLfloat)screenHeight, 0.1f, 1000.0f);
 
-		// Draw triangle
+		// Draw objects
 		shader.Use();
 		shader.SetUniform("model", model);
 		shader.SetUniform("view", camera.view);
@@ -244,6 +111,10 @@ int main()
 		bMesh2.mesh.Draw();
 		bMesh3.mesh.Draw();
 		bMesh4.mesh.Draw();
+
+		model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f)); // Translate model upwards
+		shader.SetUniform("model", model);
+		monkey.Draw();
 
 		// Draw output onto the window
 		glfwSwapBuffers(window);

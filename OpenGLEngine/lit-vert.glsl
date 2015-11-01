@@ -2,13 +2,13 @@
 
 layout (location = 0) in vec3 _pos;
 layout (location = 1) in vec3 _normal;
-//layout (location = 2) in vec2 _texCoord;
+layout (location = 2) in vec2 _texCoord;
 //layout (location = 3) in vec3 _vertColor;
 
-//out vec3 vertColor;
 out vec3 fragPos;
 out vec3 normal;
-//out vec2 texCoord;
+out vec2 texCoord;
+//out vec3 vertColor;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -19,6 +19,6 @@ void main()
 	gl_Position = projection * view * model * vec4(_pos, 1.0);
 	//fragPos = vec3(model * vec4(_pos, 1.0));
 	normal = _normal;
-	//texCoord = _texCoord;
+	texCoord = _texCoord;
 	//vertColor = _vertColor;
 }

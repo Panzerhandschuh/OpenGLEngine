@@ -1,9 +1,12 @@
 #ifndef BEZIERMESH_H
 #define BEZIERMESH_H
 
+#include <vector>
+#include <glm/glm.hpp>
 #include "Mesh.h"
 #include "BezierCurve.h"
-#include <glm/glm.hpp>
+
+using namespace std;
 
 class BezierMesh
 {

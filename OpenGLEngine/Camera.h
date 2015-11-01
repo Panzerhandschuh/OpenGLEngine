@@ -9,7 +9,7 @@
 class Camera
 {
 public:
-	GLfloat camSpeed = 8.0f;
+	GLfloat camSpeed = 10.0f;
 	GLfloat yaw, pitch;
 	glm::vec3 position;
 	glm::mat4 view;
