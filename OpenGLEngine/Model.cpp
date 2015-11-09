@@ -1,10 +1,5 @@
 #include "Model.h"
 
-Model::Model(GLchar* path)
-{
-	LoadModel(path);
-}
-
 Model::~Model()
 {
 	// Deallocate mesh objects
@@ -32,6 +27,13 @@ void Model::LoadModel(string path)
 
 	directory = path.substr(0, path.find_last_of('/'));
 	ProcessNode(scene->mRootNode, scene);
+}
+
+Mesh* Model::AddMesh()
+{
+	Mesh* mesh = new Mesh;
+	meshes.push_back(mesh);
+	return mesh;
 }
 
 void Model::ProcessNode(aiNode* node, const aiScene* scene)

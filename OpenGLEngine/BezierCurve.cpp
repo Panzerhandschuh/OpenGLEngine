@@ -28,5 +28,6 @@ glm::vec3 BezierCurve::GetTangent(float t)
 	float t2 = t * t;
 	float tt1 = 1.0f - t;
 	float tt2 = tt1 * tt1;
-	return (-3.0f * tt2 * p0) + ((3.0f * tt2 - 6.0f * t * tt1) * p1) + ((6.0f * t * tt1 - 3.0f * t2) * p2) + (3.0f * t2 * p3);
+	glm::vec3 tangent = (-3.0f * tt2 * p0) + ((3.0f * tt2 - 6.0f * t * tt1) * p1) + ((6.0f * t * tt1 - 3.0f * t2) * p2) + (3.0f * t2 * p3);
+	return glm::normalize(tangent);
 }

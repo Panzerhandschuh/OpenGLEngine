@@ -49,7 +49,7 @@ Mesh::~Mesh()
 	glDeleteBuffers(1, &ebo);
 }
 
-void Mesh::SetVertices(vector<glm::vec3> verts)
+void Mesh::SetVertices(vector<glm::vec3>& verts)
 {
 	this->vertices = verts;
 
@@ -58,7 +58,7 @@ void Mesh::SetVertices(vector<glm::vec3> verts)
 	glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind vbo
 }
 
-void Mesh::SetNormals(vector<glm::vec3> normals)
+void Mesh::SetNormals(vector<glm::vec3>& normals)
 {
 	this->normals = normals;
 
@@ -67,7 +67,7 @@ void Mesh::SetNormals(vector<glm::vec3> normals)
 	glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind vbo
 }
 
-void Mesh::SetUvs(vector<glm::vec2> uvs)
+void Mesh::SetUvs(vector<glm::vec2>& uvs)
 {
 	this->uvs = uvs;
 
@@ -76,7 +76,7 @@ void Mesh::SetUvs(vector<glm::vec2> uvs)
 	glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind vbo
 }
 
-void Mesh::SetVertexColors(vector<glm::vec3> colors)
+void Mesh::SetVertexColors(vector<glm::vec3>& colors)
 {
 	this->colors = colors;
 
@@ -85,7 +85,7 @@ void Mesh::SetVertexColors(vector<glm::vec3> colors)
 	glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind vbo
 }
 
-void Mesh::SetIndices(vector<GLuint> indices)
+void Mesh::SetIndices(vector<GLuint>& indices)
 {
 	this->indices = indices;
 

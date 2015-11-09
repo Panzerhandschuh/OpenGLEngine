@@ -11,9 +11,11 @@ using namespace std;
 class BezierMesh
 {
 public:
-	Mesh mesh;
-
 	BezierMesh(BezierCurve& curve);
+	void Draw();
+
+private:
+	Mesh mesh;
 };
 
 #endif

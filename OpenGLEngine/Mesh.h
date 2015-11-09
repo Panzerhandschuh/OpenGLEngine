@@ -22,11 +22,11 @@ public:
 
 	Mesh();
 	~Mesh();
-	void SetVertices(vector<glm::vec3> verts);
-	void SetNormals(vector<glm::vec3> normals);
-	void SetUvs(vector<glm::vec2> uvs);
-	void SetVertexColors(vector<glm::vec3> colors);
-	void SetIndices(vector<GLuint> indices);
+	void SetVertices(vector<glm::vec3>& verts);
+	void SetNormals(vector<glm::vec3>& normals);
+	void SetUvs(vector<glm::vec2>& uvs);
+	void SetVertexColors(vector<glm::vec3>& colors);
+	void SetIndices(vector<GLuint>& indices);
 	void SetTexture(const char* imgFile);
 	void Draw();
 

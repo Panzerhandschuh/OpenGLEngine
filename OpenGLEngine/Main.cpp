@@ -10,6 +10,7 @@
 #include "Model.h"
 #include "Shader.h"
 #include "BezierMesh.h"
+#include "BezierPath.h"
 
 GLuint screenWidth = 800;
 GLuint screenHeight = 600;
@@ -56,17 +57,28 @@ int main()
 	camera.position = glm::vec3(0.0f, 2.0f, 3.0f);
 
 	// Create bezier meshes
-	BezierCurve curve1(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(4.0f, 0.0f, 0.0f), glm::vec3(4.0f, 0.0f, -4.0f), glm::vec3(8.0f, 0.0f, -4.0f));
-	BezierMesh bMesh1(curve1);
-	BezierCurve curve2(glm::vec3(8.0f, 0.0f, -4.0f), glm::vec3(10.0f, 0.0f, -4.0f), glm::vec3(12.0f, 0.0f, -6.0f), glm::vec3(12.0f, 0.0f, -8.0f));
-	BezierMesh bMesh2(curve2);
-	BezierCurve curve3(glm::vec3(12.0f, 0.0f, -8.0f), glm::vec3(12.0f, 0.0f, -16.0f), glm::vec3(4.0f, 0.0f, -6.0f), glm::vec3(0.0f, 0.0f, -6.0f));
-	BezierMesh bMesh3(curve3);
-	BezierCurve curve4(glm::vec3(0.0f, 0.0f, -6.0f), glm::vec3(-6.0f, 0.0f, -6.0f), glm::vec3(-6.0f, 0.0f, 0), glm::vec3(0.0f, 0.0f, 0.0f));
-	BezierMesh bMesh4(curve4);
+	BezierCurve curve1(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(8.0f, 0.0f, 0.0f), glm::vec3(8.0f, 4.0f, -8.0f), glm::vec3(16.0f, 4.0f, -8.0f));
+	//BezierMesh bMesh1(curve1);
+	BezierCurve curve2(glm::vec3(16.0f, 4.0f, -8.0f), glm::vec3(20.0f, 4.0f, -8.0f), glm::vec3(24.0f, 0.0f, -12.0f), glm::vec3(24.0f, 0.0f, -16.0f));
+	//BezierMesh bMesh2(curve2);
+	BezierCurve curve3(glm::vec3(24.0f, 0.0f, -16.0f), glm::vec3(24.0f, 0.0f, -32.0f), glm::vec3(8.0f, 0.0f, -12.0f), glm::vec3(0.0f, 0.0f, -12.0f));
+	//BezierMesh bMesh3(curve3);
+	BezierCurve curve4(glm::vec3(0.0f, 0.0f, -12.0f), glm::vec3(-12.0f, 0.0f, -12.0f), glm::vec3(-12.0f, 0.0f, 0), glm::vec3(0.0f, 0.0f, 0.0f));
+	//BezierMesh bMesh4(curve4);
 
 	// Create model
-	Model monkey("suzanne.obj");
+	Model track;
+	track.LoadModel("CoasterTrack.FBX");
+
+	// Create bezier path
+	BezierPath path1(track, curve1);
+	path1.DeformPath();
+	BezierPath path2(track, curve2);
+	path2.DeformPath();
+	BezierPath path3(track, curve3);
+	path3.DeformPath();
+	BezierPath path4(track, curve4);
+	path4.DeformPath();
 
 	// Draw in wireframe
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -107,14 +119,18 @@ int main()
 		shader.SetUniform("ambient", 0.1f, 0.1f, 0.1f);
 		shader.SetUniform("lightColor", 1.0f, 1.0f, 1.0f);
 		shader.SetUniform("lightDir", 1.0f, 1.0f, 1.0f);
-		bMesh1.mesh.Draw();
-		bMesh2.mesh.Draw();
-		bMesh3.mesh.Draw();
-		bMesh4.mesh.Draw();
+		//bMesh1.Draw();
+		//bMesh2.Draw();
+		//bMesh3.Draw();
+		//bMesh4.Draw();
+		path1.Draw();
+		path2.Draw();
+		path3.Draw();
+		path4.Draw();
 
-		model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f)); // Translate model upwards
-		shader.SetUniform("model", model);
-		monkey.Draw();
+		//model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f)); // Translate model upwards
+		//shader.SetUniform("model", model);
+		//track.Draw();
 
 		// Draw output onto the window
 		glfwSwapBuffers(window);

@@ -15,15 +15,16 @@ using namespace std;
 class Model
 {
 public:
-	Model(GLchar* path);
+	vector<Mesh*> meshes;
+
 	~Model();
+	void LoadModel(string path);
+	Mesh* AddMesh();
 	void Draw();
 
 private:
-	vector<Mesh*> meshes;
 	string directory;
 	
-	void LoadModel(string path);
 	void ProcessNode(aiNode* node, const aiScene* scene);
 	Mesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
 };

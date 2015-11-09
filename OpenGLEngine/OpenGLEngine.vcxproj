@@ -70,6 +70,8 @@
   <ItemGroup>
     <ClCompile Include="BezierCurve.cpp" />
     <ClCompile Include="BezierMesh.cpp" />
+    <ClCompile Include="BezierPath.cpp" />
+    <ClCompile Include="Bounds.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="FileUtil.cpp" />
     <ClCompile Include="Image.cpp" />
@@ -82,6 +84,8 @@
   <ItemGroup>
     <ClInclude Include="BezierCurve.h" />
     <ClInclude Include="BezierMesh.h" />
+    <ClInclude Include="BezierPath.h" />
+    <ClInclude Include="Bounds.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="FileUtil.h" />
     <ClInclude Include="Image.h" />

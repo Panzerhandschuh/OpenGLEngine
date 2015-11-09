@@ -50,3 +50,8 @@ BezierMesh::BezierMesh(BezierCurve& curve)
 	mesh.SetUvs(uvs);
 	mesh.SetIndices(indices);
 }
+
+void BezierMesh::Draw()
+{
+	mesh.Draw();
+}
