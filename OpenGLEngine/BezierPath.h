@@ -6,6 +6,7 @@
 #include "BezierCurve.h"
 
 #define DEFORM_AXIS 2
+#define MAX_PATH_VERTS 65535
 
 class BezierPath
 {
@@ -18,6 +19,8 @@ private:
 	BezierCurve curve;
 	Model* sourceModel;
 	Model pathModel;
+
+	int GetNumSegments();
 };
 
 #endif

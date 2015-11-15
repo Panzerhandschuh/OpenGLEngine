@@ -31,3 +31,20 @@ glm::vec3 BezierCurve::GetTangent(float t)
 	glm::vec3 tangent = (-3.0f * tt2 * p0) + ((3.0f * tt2 - 6.0f * t * tt1) * p1) + ((6.0f * t * tt1 - 3.0f * t2) * p2) + (3.0f * t2 * p3);
 	return glm::normalize(tangent);
 }
+
+float BezierCurve::GetLength()
+{
+	float cpLength = glm::distance(p0, p1) + glm::distance(p1, p2) + glm::distance(p2, p3);
+	int numSteps = glm::ceil(cpLength * STEP_SCALE);
+	float curveLength = 0.0f;
+	glm::vec3 start = GetPoint(0.0f);
+	for (int i = 0; i < numSteps; i++)
+	{
+		float t = (i + 1) / (float)numSteps;
+		glm::vec3 end = GetPoint(t);
+		curveLength += glm::distance(start, end);
+		start = end;
+	}
+
+	return curveLength;
+}
