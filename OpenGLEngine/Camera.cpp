@@ -22,9 +22,12 @@ void Camera::Update(GLfloat deltaTime)
 		position += camSpeed * GetUp() * deltaTime;
 
 	// Mouse look
-	glm::vec2 mouseDelta = InputManager::mouseDelta;
-	yaw += mouseDelta.x;
-	pitch += mouseDelta.y;
+	if (InputManager::mouseButtons[GLFW_MOUSE_BUTTON_RIGHT])
+	{
+		glm::vec2 mouseDelta = InputManager::mouseDelta;
+		yaw += mouseDelta.x;
+		pitch += mouseDelta.y;
+	}
 
 	// Clip the pitch range of the camera
 	if (pitch > 89.0f)
