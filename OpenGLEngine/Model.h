@@ -17,6 +17,8 @@ class Model
 public:
 	vector<Mesh*> meshes;
 
+	Model();
+	Model(string path);
 	~Model();
 	void LoadModel(string path);
 	Mesh* AddMesh();

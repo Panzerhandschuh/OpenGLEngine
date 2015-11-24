@@ -3,6 +3,31 @@
 BezierPath::BezierPath(Model& sourceModel, BezierCurve& curve) : curve(curve)
 {
 	this->sourceModel = &sourceModel;
+	pointModel = new Model("Sphere.FBX");
+}
+
+BezierPath::~BezierPath()
+{
+	delete pointModel;
+}
+
+void BezierPath::Update(GLfloat deltaTime)
+{
+	if (InputManager::GetMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT))
+	{
+		vec3 rayPos = Camera::main.position;
+		vec3 rayDir = Physics::GetRayFromMouse();
+		//Debug::DrawRay(vec3(0.0f, 0.0f, 2.0f), rayDir * 5.0f);
+		float dist1, dist2, dist3, dist4;
+		if (Physics::RaycastSphere(rayPos, rayDir, curve.p0, 0.5f, dist1))
+			cout << "hit sphere" << endl;
+		if (Physics::RaycastSphere(rayPos, rayDir, curve.p1, 0.5f, dist1))
+			cout << "hit sphere" << endl;
+		if (Physics::RaycastSphere(rayPos, rayDir, curve.p2, 0.5f, dist1))
+			cout << "hit sphere" << endl;
+		if (Physics::RaycastSphere(rayPos, rayDir, curve.p3, 0.5f, dist1))
+			cout << "hit sphere" << endl;
+	}
 }
 
 void BezierPath::DeformPath()
@@ -81,9 +106,25 @@ void BezierPath::DeformPath()
 	pathMesh->SetIndices(indices);
 }
 
-void BezierPath::Draw()
+void BezierPath::Draw(Shader& shader)
 {
+	glm::mat4 model;
+	shader.SetUniform("model", model);
 	pathModel.Draw();
+
+	// Draw bezier control points
+	model = glm::translate(glm::mat4(1.0f), curve.p0);
+	shader.SetUniform("model", model);
+	pointModel->Draw();
+	model = glm::translate(glm::mat4(1.0f), curve.p1);
+	shader.SetUniform("model", model);
+	pointModel->Draw();
+	model = glm::translate(glm::mat4(1.0f), curve.p2);
+	shader.SetUniform("model", model);
+	pointModel->Draw();
+	model = glm::translate(glm::mat4(1.0f), curve.p3);
+	shader.SetUniform("model", model);
+	pointModel->Draw();
 }
 
 int BezierPath::GetNumSegments()

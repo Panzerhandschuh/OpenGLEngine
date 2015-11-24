@@ -1,7 +1,5 @@
 #include "Mesh.h"
 
-// TODO: Check if shader attributes can be set outside of vbo/texture binds
-
 // Creates an empty mesh object
 Mesh::Mesh()
 {

@@ -1,13 +1,14 @@
 #include "InputManager.h"
 
-bool InputManager::keys[GLFW_KEY_LAST];
-bool InputManager::mouseButtons[GLFW_MOUSE_BUTTON_LAST];
+glm::vec2 InputManager::mousePos;
 glm::vec2 InputManager::mouseDelta;
-GLfloat InputManager::mouseSensitivity = 0.25f;
 
 GLFWwindow* InputManager::window;
 bool InputManager::firstMouse = true;
-glm::vec2 InputManager::lastMouse;
+bool InputManager::keys[GLFW_KEY_LAST];
+bool InputManager::keysDown[GLFW_KEY_LAST];
+bool InputManager::mouseButtons[GLFW_MOUSE_BUTTON_LAST];
+bool InputManager::mouseButtonsDown[GLFW_MOUSE_BUTTON_LAST];
 
 void InputManager::Init(GLFWwindow* window)
 {
@@ -24,6 +25,10 @@ void InputManager::Init(GLFWwindow* window)
 
 void InputManager::Update()
 {
+	// Clear keys pressed down
+	ResetDown();
+
+	// Check for input
 	glfwPollEvents();
 
 	double xpos, ypos;
@@ -31,24 +36,48 @@ void InputManager::Update()
 
 	if (firstMouse)
 	{
-		lastMouse.x = (GLfloat)xpos;
-		lastMouse.y = (GLfloat)ypos;
+		mousePos.x = (GLfloat)xpos;
+		mousePos.y = (GLfloat)ypos;
 		firstMouse = false;
 	}
 	
-	mouseDelta.x = (GLfloat)xpos - lastMouse.x;
-	mouseDelta.y = lastMouse.y - (GLfloat)ypos; // Reversed since y-coordinates go from bottom to left
-	lastMouse.x = (GLfloat)xpos;
-	lastMouse.y = (GLfloat)ypos;
-	
-	mouseDelta *= mouseSensitivity;
-	mouseDelta *= mouseSensitivity;
+	mouseDelta.x = (GLfloat)xpos - mousePos.x;
+	mouseDelta.y = mousePos.y - (GLfloat)ypos; // Reversed since y-coordinates go from bottom to left
+
+	mousePos.x = (GLfloat)xpos;
+	mousePos.y = (GLfloat)ypos;
+}
+
+bool InputManager::GetKey(int key)
+{
+	return keys[key];
+}
+
+bool InputManager::GetKeyDown(int key)
+{
+	return keysDown[key];
+}
+
+bool InputManager::GetMouseButton(int button)
+{
+	return mouseButtons[button];
+}
+
+bool InputManager::GetMouseButtonDown(int button)
+{
+	return mouseButtonsDown[button];
 }
 
 void InputManager::SetCursorVisibility(bool isVisible)
 {
 	int cursorMode = (isVisible) ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN;
 	glfwSetInputMode(window, GLFW_CURSOR, cursorMode);
+}
+
+void InputManager::ResetDown()
+{
+	std::fill(keysDown, keysDown + GLFW_KEY_LAST, 0);
+	std::fill(mouseButtonsDown, mouseButtonsDown + GLFW_MOUSE_BUTTON_LAST, 0);
 }
 
 void InputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -61,7 +90,10 @@ void InputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int ac
 	if (key >= 0 && key < GLFW_KEY_LAST)
 	{
 		if (action == GLFW_PRESS)
+		{
 			keys[key] = true;
+			keysDown[key] = true;
+		}
 		else if (action == GLFW_RELEASE)
 			keys[key] = false;
 	}
@@ -72,7 +104,10 @@ void InputManager::MouseButtonCallback(GLFWwindow* window, int button, int actio
 	if (button >= 0 && button < GLFW_MOUSE_BUTTON_LAST)
 	{
 		if (action == GLFW_PRESS)
+		{
 			mouseButtons[button] = true;
+			mouseButtonsDown[button] = true;
+		}
 		else if (action == GLFW_RELEASE)
 			mouseButtons[button] = false;
 	}

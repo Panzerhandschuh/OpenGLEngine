@@ -40,9 +40,6 @@ Shader::~Shader()
 
 void Shader::Use()
 {
-	//GLfloat time = glfwGetTime();
-	//GLfloat green = (sin(time) / 2.0f) + 0.5f;
-	//glUniform4f(0, 0.0f, green, 0.0f, 1.0f);
 	glUseProgram(program);
 }
 

@@ -73,25 +73,33 @@
     <ClCompile Include="BezierPath.cpp" />
     <ClCompile Include="Bounds.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="Engine.cpp" />
     <ClCompile Include="FileUtil.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssetManager.h" />
     <ClInclude Include="BezierCurve.h" />
     <ClInclude Include="BezierMesh.h" />
     <ClInclude Include="BezierPath.h" />
     <ClInclude Include="Bounds.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Debug.h" />
+    <ClInclude Include="Engine.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="FileUtil.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="Physics.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>

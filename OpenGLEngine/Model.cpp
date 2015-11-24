@@ -1,5 +1,12 @@
 #include "Model.h"
 
+Model::Model() { }
+
+Model::Model(string path)
+{
+	LoadModel(path);
+}
+
 Model::~Model()
 {
 	// Deallocate mesh objects

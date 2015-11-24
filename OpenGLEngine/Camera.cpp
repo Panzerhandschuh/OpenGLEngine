@@ -1,32 +1,35 @@
 #include "Camera.h"
 
-//Camera::Camera()
-//{
-//	position = glm::vec3(0.0f, 0.0f, 5.0f);
-//}
+Camera Camera::main;
+
+Camera::Camera()
+{
+	proj = glm::perspective(glm::quarter_pi<GLfloat>(),
+		(GLfloat)Engine::screenWidth / (GLfloat)Engine::screenHeight, 0.1f, 1000.0f);
+}
 
 void Camera::Update(GLfloat deltaTime)
 {
 	// Move camera
-	if (InputManager::keys[GLFW_KEY_W])
-		position += camSpeed * -GetForward() * deltaTime;
-	if (InputManager::keys[GLFW_KEY_S])
-		position += camSpeed * GetForward() * deltaTime;
-	if (InputManager::keys[GLFW_KEY_A])
-		position += camSpeed * -GetRight() * deltaTime;
-	if (InputManager::keys[GLFW_KEY_D])
-		position += camSpeed * GetRight() * deltaTime;
-	if (InputManager::keys[GLFW_KEY_Q])
-		position += camSpeed * -GetUp() * deltaTime;
-	if (InputManager::keys[GLFW_KEY_E])
-		position += camSpeed * GetUp() * deltaTime;
+	if (InputManager::GetKey(GLFW_KEY_W))
+		position += speed * -GetForward() * deltaTime;
+	if (InputManager::GetKey(GLFW_KEY_S))
+		position += speed * GetForward() * deltaTime;
+	if (InputManager::GetKey(GLFW_KEY_A))
+		position += speed * -GetRight() * deltaTime;
+	if (InputManager::GetKey(GLFW_KEY_D))
+		position += speed * GetRight() * deltaTime;
+	if (InputManager::GetKey(GLFW_KEY_Q))
+		position += speed * -GetUp() * deltaTime;
+	if (InputManager::GetKey(GLFW_KEY_E))
+		position += speed * GetUp() * deltaTime;
 
 	// Mouse look
-	if (InputManager::mouseButtons[GLFW_MOUSE_BUTTON_RIGHT])
+	if (InputManager::GetMouseButton(GLFW_MOUSE_BUTTON_RIGHT))
 	{
 		glm::vec2 mouseDelta = InputManager::mouseDelta;
-		yaw += mouseDelta.x;
-		pitch += mouseDelta.y;
+		yaw += mouseDelta.x * sensitivity;
+		pitch += mouseDelta.y * sensitivity;
 	}
 
 	// Clip the pitch range of the camera
