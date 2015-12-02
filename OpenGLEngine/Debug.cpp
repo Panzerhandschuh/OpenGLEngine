@@ -2,10 +2,14 @@
 
 void Debug::DrawRay(vec3 pos, vec3 dir)
 {
+	DrawLine(pos, pos + dir);
+}
+
+void Debug::DrawLine(vec3 v1, vec3 v2)
+{
 	vec3 verts[2];
-	verts[0] = pos;
-	vec3 end = pos + dir;
-	verts[1] = end;
+	verts[0] = v1;
+	verts[1] = v2;
 
 	// Create buffers
 	GLuint vao, vbo;

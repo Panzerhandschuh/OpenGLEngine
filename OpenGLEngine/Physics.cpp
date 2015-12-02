@@ -20,17 +20,29 @@ vec3 Physics::GetRayFromMouse()
 	return normalize(rayWorld);
 }
 
-bool Physics::RaycastPlane(vec3 rayPos, vec3 rayDir, vec3 planePos, vec3 planeNorm, float& dist)
+bool Physics::RaycastPlane(vec3 rayPos, vec3 rayDir, vec3 planePos, vec3 planeNorm, RaycastHit& hit)
 {
-	return false;
+	float dot1 = dot(rayDir, planeNorm);
+	if (dot1 == 0.0f)
+		return false;
+
+	float dist = dot(-planePos, planeNorm);
+	float dot2 = dot(rayPos, planeNorm);
+	float t = -(dot2 + dist) / dot1;
+	if (t < 0.0f)
+		return false;
+
+	hit.distance = t;
+	hit.point = rayPos + rayDir * t;
+	return true;
 }
 
-bool Physics::RaycastSphere(vec3 rayPos, vec3 rayDir, vec3 spherePos, float sphereRadius, float& dist)
+bool Physics::RaycastSphere(vec3 rayPos, vec3 rayDir, vec3 spherePos, float sphereRadius, RaycastHit& hit)
 {
 	// Find quadratic equation
 	vec3 toSphere = rayPos - spherePos;
 	float b = dot(rayDir, toSphere);
-	float c = dot(toSphere, toSphere) - (sphereRadius * sphereRadius);
+	float c = dot(toSphere, toSphere) - sphereRadius * sphereRadius;
 	float bSquaredMinusC = b * b - c;
 
 	// Check for imaginary answer (ray completely misses sphere)
@@ -43,7 +55,7 @@ bool Physics::RaycastSphere(vec3 rayPos, vec3 rayDir, vec3 spherePos, float sphe
 		// Get the 2 intersection distances along ray
 		float root1 = -b + sqrt(bSquaredMinusC);
 		float root2 = -b - sqrt(bSquaredMinusC);
-		dist = root2;
+		float t = root2;
 
 		// If behind viewer, throw one or both away
 		if (root1 < 0.0f)
@@ -52,8 +64,10 @@ bool Physics::RaycastSphere(vec3 rayPos, vec3 rayDir, vec3 spherePos, float sphe
 				return false;
 		}
 		else if (root2 < 0.0f)
-			dist = root1;
+			t = root1;
 
+		hit.distance = t;
+		hit.point = rayPos + rayDir * t;
 		return true;
 	}
 
@@ -65,7 +79,8 @@ bool Physics::RaycastSphere(vec3 rayPos, vec3 rayDir, vec3 spherePos, float sphe
 		if (t < 0.0f)
 			return false;
 
-		dist = t;
+		hit.distance = t;
+		hit.point = rayPos + rayDir * t;
 		return true;
 	}
 

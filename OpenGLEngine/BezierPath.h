@@ -9,6 +9,9 @@
 #include "Physics.h"
 #include "Debug.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <vector>
+
+using namespace glm;
 
 #define DEFORM_AXIS 2
 #define MAX_PATH_VERTS 65535
@@ -27,8 +30,14 @@ private:
 	Model* sourceModel;
 	Model pathModel;
 	Model* pointModel;
+	//vec3* selectedPoint = 0;
+	vector<vec3*> selectedPoints;
+	vector<vec3> pointOffsets; // Offset from plane to object positions
+	vec3 planePos;
+	bool useHeightPlane;
 
 	int GetNumSegments();
+	bool RaycastPoints(RaycastHit& hit, vector<vec3*>& selectedPoints);
 };
 
 #endif

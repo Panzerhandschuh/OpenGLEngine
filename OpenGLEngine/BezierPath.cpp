@@ -3,6 +3,7 @@
 BezierPath::BezierPath(Model& sourceModel, BezierCurve& curve) : curve(curve)
 {
 	this->sourceModel = &sourceModel;
+	pathModel.AddMesh();
 	pointModel = new Model("Sphere.FBX");
 }
 
@@ -13,20 +14,47 @@ BezierPath::~BezierPath()
 
 void BezierPath::Update(GLfloat deltaTime)
 {
-	if (InputManager::GetMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT))
+	if (selectedPoints.size() == 0)
 	{
-		vec3 rayPos = Camera::main.position;
-		vec3 rayDir = Physics::GetRayFromMouse();
-		//Debug::DrawRay(vec3(0.0f, 0.0f, 2.0f), rayDir * 5.0f);
-		float dist1, dist2, dist3, dist4;
-		if (Physics::RaycastSphere(rayPos, rayDir, curve.p0, 0.5f, dist1))
-			cout << "hit sphere" << endl;
-		if (Physics::RaycastSphere(rayPos, rayDir, curve.p1, 0.5f, dist1))
-			cout << "hit sphere" << endl;
-		if (Physics::RaycastSphere(rayPos, rayDir, curve.p2, 0.5f, dist1))
-			cout << "hit sphere" << endl;
-		if (Physics::RaycastSphere(rayPos, rayDir, curve.p3, 0.5f, dist1))
-			cout << "hit sphere" << endl;
+		if (InputManager::GetMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT))
+		{
+			RaycastHit hit;
+			if (RaycastPoints(hit, selectedPoints))
+			{
+				planePos = hit.point;
+				useHeightPlane = InputManager::GetKey(GLFW_KEY_LEFT_CONTROL);
+				pointOffsets.resize(selectedPoints.size());
+				for (int i = 0; i < selectedPoints.size(); i++)
+					pointOffsets[i] = *selectedPoints[i] - planePos;
+				//cout << "dist: " << hit.distance << endl;
+			}
+		}
+	}
+	
+	if (selectedPoints.size() > 0)
+	{
+		if (!InputManager::GetMouseButton(GLFW_MOUSE_BUTTON_LEFT))
+			selectedPoints.clear();
+		else
+		{
+			vec3 rayPos = Camera::main.position;
+			vec3 rayDir = Physics::GetRayFromMouse();
+			vec3 planeNorm = (useHeightPlane) ? Camera::main.GetForward() : vec3(0.0f, 1.0f, 0.0f);
+			RaycastHit hit;
+			if (Physics::RaycastPlane(rayPos, rayDir, planePos, planeNorm, hit))
+			{
+				//cout << "dist: " << hit.distance << endl;
+				if (useHeightPlane)
+				{
+					hit.point.x = planePos.x;
+					hit.point.z = planePos.z;
+				}
+
+				for (int i = 0; i < selectedPoints.size(); i++)
+					*selectedPoints[i] = hit.point + pointOffsets[i];
+				DeformPath();
+			}
+		}
 	}
 }
 
@@ -44,13 +72,13 @@ void BezierPath::DeformPath()
 	int numSegments = GetNumSegments();
 	//cout << "Num Segments: " << numSegments << endl;
 
-	vector<glm::vec3> sourceVerts = sourceMesh->vertices;
-	vector<glm::vec3> sourceNorms = sourceMesh->normals;
-	vector<glm::vec2> sourceUvs = sourceMesh->uvs;
+	vector<vec3> sourceVerts = sourceMesh->vertices;
+	vector<vec3> sourceNorms = sourceMesh->normals;
+	vector<vec2> sourceUvs = sourceMesh->uvs;
 	vector<GLuint> sourceIndices = sourceMesh->indices;
-	vector<glm::vec3> vertices(sourceVerts.size() * numSegments);
-	vector<glm::vec3> normals(sourceNorms.size() * numSegments);
-	vector<glm::vec2> uvs(sourceUvs.size() * numSegments);
+	vector<vec3> vertices(sourceVerts.size() * numSegments);
+	vector<vec3> normals(sourceNorms.size() * numSegments);
+	vector<vec2> uvs(sourceUvs.size() * numSegments);
 	vector<GLuint> indices(sourceIndices.size() * numSegments);
 	for (int segment = 0; segment < numSegments; segment++)
 	{
@@ -69,14 +97,14 @@ void BezierPath::DeformPath()
 			float percentLength = (t + segment) / numSegments;
 
 			// Position
-			glm::vec3 bPos = curve.GetPoint(percentLength);
+			vec3 bPos = curve.GetPoint(percentLength);
 
 			// Rotation
-			glm::vec3 tang = curve.GetTangent(percentLength);
-			glm::vec3 up(0.0f, 1.0f, 0.0f);
-			glm::vec3 biNormal = glm::cross(up, tang);
-			glm::vec3 norm = glm::cross(tang, biNormal);
-			glm::mat4 curveRot(biNormal.x, biNormal.y, biNormal.z, 0.0f,
+			vec3 tang = curve.GetTangent(percentLength);
+			vec3 up(0.0f, 1.0f, 0.0f);
+			vec3 biNormal = cross(up, tang);
+			vec3 norm = cross(tang, biNormal);
+			mat4 curveRot(biNormal.x, biNormal.y, biNormal.z, 0.0f,
 				norm.x, norm.y, norm.z, 0.0f,
 				tang.x, tang.y, tang.z, 0.0f,
 				0.0f, 0.0f, 0.0f, 1.0f);
@@ -85,12 +113,12 @@ void BezierPath::DeformPath()
 			int currentIndex = i + (segment * sourceMesh->vertices.size());
 
 			// Rotate normal
-			normals[currentIndex] = (glm::vec3)(curveRot * glm::vec4(sourceNorms[i], 0.0f));
+			normals[currentIndex] = (vec3)(curveRot * vec4(sourceNorms[i], 0.0f));
 
 			// Position and rotate vertex
-			glm::vec3 vNew = sourceVerts[i]; // Create a temporary vector for rotating and positioning the transformed vertex
+			vec3 vNew = sourceVerts[i]; // Create a temporary vector for rotating and positioning the transformed vertex
 			vNew[DEFORM_AXIS] = 0.0f; // Set deform axis coordinate to 0 so the vertex is rotated relative to the curve
-			vNew = (glm::vec3)(curveRot * glm::vec4(vNew, 0.0f));
+			vNew = (vec3)(curveRot * vec4(vNew, 0.0f));
 			vNew += bPos;
 			vertices[currentIndex] = vNew;
 		}
@@ -99,7 +127,7 @@ void BezierPath::DeformPath()
 		uvs.insert(uvs.begin() + offset, sourceUvs.begin(), sourceUvs.end());
 	}
 
-	Mesh* pathMesh = pathModel.AddMesh();
+	Mesh* pathMesh = pathModel.meshes[0];
 	pathMesh->SetVertices(vertices);
 	pathMesh->SetNormals(normals);
 	pathMesh->SetUvs(uvs);
@@ -108,23 +136,33 @@ void BezierPath::DeformPath()
 
 void BezierPath::Draw(Shader& shader)
 {
-	glm::mat4 model;
+	shader.Use();
+	mat4 model;
+	shader.SetUniform("objectColor", 1.0f, 1.0f, 1.0f);
 	shader.SetUniform("model", model);
 	pathModel.Draw();
 
 	// Draw bezier control points
-	model = glm::translate(glm::mat4(1.0f), curve.p0);
+	shader.SetUniform("objectColor", 0.0f, 1.0f, 0.0f);
+	model = translate(mat4(1.0f), curve.p0);
+	model = scale(model, vec3(2.0f));
 	shader.SetUniform("model", model);
 	pointModel->Draw();
-	model = glm::translate(glm::mat4(1.0f), curve.p1);
+	model = translate(mat4(1.0f), curve.p1);
+	shader.SetUniform("model", model);
+	//pointModel->Draw();
+	model = translate(mat4(1.0f), curve.p2);
+	shader.SetUniform("model", model);
+	//pointModel->Draw();
+	model = translate(mat4(1.0f), curve.p3);
+	model = scale(model, vec3(2.0f));
 	shader.SetUniform("model", model);
 	pointModel->Draw();
-	model = glm::translate(glm::mat4(1.0f), curve.p2);
-	shader.SetUniform("model", model);
-	pointModel->Draw();
-	model = glm::translate(glm::mat4(1.0f), curve.p3);
-	shader.SetUniform("model", model);
-	pointModel->Draw();
+
+	// Draw line segments
+	//Debug::DrawLine(curve.p0, curve.p1);
+	//Debug::DrawLine(curve.p1, curve.p2);
+	//Debug::DrawLine(curve.p2, curve.p3);
 }
 
 int BezierPath::GetNumSegments()
@@ -139,4 +177,65 @@ int BezierPath::GetNumSegments()
 		numSegments = MAX_PATH_VERTS / sourceMesh->vertices.size();
 
 	return numSegments;
+}
+
+bool BezierPath::RaycastPoints(RaycastHit& hit, vector<vec3*>& selectedPoints)
+{
+	vec3 rayPos = Camera::main.position;
+	vec3 rayDir = Physics::GetRayFromMouse();
+	//Debug::DrawRay(vec3(0.0f, 0.0f, 2.0f), rayDir * 5.0f);
+	RaycastHit hit1, hit2, hit3, hit4;
+	float minDist = numeric_limits<float>::max();
+	vec3* controlPoint = 0;
+	if (Physics::RaycastSphere(rayPos, rayDir, curve.p0, 1.0f, hit1))
+	{
+		cout << "hit sphere: " << hit1.point.x << ", " << hit1.point.y << ", " << hit1.point.z << endl;
+		minDist = hit1.distance;
+		hit = hit1;
+		controlPoint = &curve.p0;
+	}
+	if (Physics::RaycastSphere(rayPos, rayDir, curve.p1, 1.0f, hit2))
+	{
+		cout << "hit sphere: " << hit2.point.x << ", " << hit2.point.y << ", " << hit2.point.z << endl;
+		if (hit2.distance < minDist)
+		{
+			minDist = hit2.distance;
+			hit = hit2;
+			controlPoint = &curve.p1;
+		}
+	}
+	if (Physics::RaycastSphere(rayPos, rayDir, curve.p2, 1.0f, hit3))
+	{
+		cout << "hit sphere: " << hit3.point.x << ", " << hit3.point.y << ", " << hit3.point.z << endl;
+		if (hit3.distance < minDist)
+		{
+			minDist = hit3.distance;
+			hit = hit3;
+			controlPoint = &curve.p2;
+		}
+	}
+	if (Physics::RaycastSphere(rayPos, rayDir, curve.p3, 1.0f, hit4))
+	{
+		cout << "hit sphere: " << hit4.point.x << ", " << hit4.point.y << ", " << hit4.point.z << endl;
+		if (hit4.distance < minDist)
+		{
+			minDist = hit4.distance;
+			hit = hit4;
+			controlPoint = &curve.p3;
+		}
+	}
+
+	selectedPoints.clear();
+	if (controlPoint != 0)
+	{
+		selectedPoints.push_back(controlPoint);
+		if (controlPoint == &curve.p0)
+			selectedPoints.push_back(&curve.p1);
+		else if (controlPoint == &curve.p3)
+			selectedPoints.push_back(&curve.p2);
+
+		return true;
+	}
+
+	return false;
 }

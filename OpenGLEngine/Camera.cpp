@@ -46,7 +46,7 @@ void Camera::Update(GLfloat deltaTime)
 	glm::vec3 right = glm::normalize(glm::cross(front, glm::vec3(0.0f, 1.0f, 0.0f)));
 	glm::vec3 up = glm::normalize(glm::cross(right, front));
 
-	//camera.view = glm::mat4(right.x, right.y, right.z, 0.0f, 
+	//view = glm::mat4(right.x, right.y, right.z, 0.0f, 
 	//	up.x, up.y, up.z, 0.0f, 
 	//	front.x, front.y, front.z, 0.0f, 
 	//	0.0f, 0.0f, 0.0f, 1.0f);
