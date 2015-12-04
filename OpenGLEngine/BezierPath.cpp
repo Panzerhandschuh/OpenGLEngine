@@ -60,6 +60,8 @@ void BezierPath::Update(GLfloat deltaTime)
 
 void BezierPath::DeformPath()
 {
+	using namespace std;
+
 	Mesh* sourceMesh = sourceModel->meshes[0];
 	Bounds bounds(*sourceMesh);
 
@@ -179,24 +181,24 @@ int BezierPath::GetNumSegments()
 	return numSegments;
 }
 
-bool BezierPath::RaycastPoints(RaycastHit& hit, vector<vec3*>& selectedPoints)
+bool BezierPath::RaycastPoints(RaycastHit& hit, std::vector<vec3*>& selectedPoints)
 {
 	vec3 rayPos = Camera::main.position;
 	vec3 rayDir = Physics::GetRayFromMouse();
 	//Debug::DrawRay(vec3(0.0f, 0.0f, 2.0f), rayDir * 5.0f);
 	RaycastHit hit1, hit2, hit3, hit4;
-	float minDist = numeric_limits<float>::max();
+	float minDist = std::numeric_limits<float>::max();
 	vec3* controlPoint = 0;
 	if (Physics::RaycastSphere(rayPos, rayDir, curve.p0, 1.0f, hit1))
 	{
-		cout << "hit sphere: " << hit1.point.x << ", " << hit1.point.y << ", " << hit1.point.z << endl;
+		std::cout << "hit sphere: " << hit1.point.x << ", " << hit1.point.y << ", " << hit1.point.z << std::endl;
 		minDist = hit1.distance;
 		hit = hit1;
 		controlPoint = &curve.p0;
 	}
 	if (Physics::RaycastSphere(rayPos, rayDir, curve.p1, 1.0f, hit2))
 	{
-		cout << "hit sphere: " << hit2.point.x << ", " << hit2.point.y << ", " << hit2.point.z << endl;
+		std::cout << "hit sphere: " << hit2.point.x << ", " << hit2.point.y << ", " << hit2.point.z << std::endl;
 		if (hit2.distance < minDist)
 		{
 			minDist = hit2.distance;
@@ -206,7 +208,7 @@ bool BezierPath::RaycastPoints(RaycastHit& hit, vector<vec3*>& selectedPoints)
 	}
 	if (Physics::RaycastSphere(rayPos, rayDir, curve.p2, 1.0f, hit3))
 	{
-		cout << "hit sphere: " << hit3.point.x << ", " << hit3.point.y << ", " << hit3.point.z << endl;
+		std::cout << "hit sphere: " << hit3.point.x << ", " << hit3.point.y << ", " << hit3.point.z << std::endl;
 		if (hit3.distance < minDist)
 		{
 			minDist = hit3.distance;
@@ -216,7 +218,7 @@ bool BezierPath::RaycastPoints(RaycastHit& hit, vector<vec3*>& selectedPoints)
 	}
 	if (Physics::RaycastSphere(rayPos, rayDir, curve.p3, 1.0f, hit4))
 	{
-		cout << "hit sphere: " << hit4.point.x << ", " << hit4.point.y << ", " << hit4.point.z << endl;
+		std::cout << "hit sphere: " << hit4.point.x << ", " << hit4.point.y << ", " << hit4.point.z << std::endl;
 		if (hit4.distance < minDist)
 		{
 			minDist = hit4.distance;

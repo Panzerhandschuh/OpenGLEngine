@@ -7,6 +7,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include "Engine.h"
+#include "EntityManager.h"
+#include "Transform.h"
+#include "PathPoint.h"
 #include "Camera.h"
 #include "Model.h"
 #include "Shader.h"
@@ -82,6 +85,12 @@ int main()
 	BezierPath path4(track, curve4);
 	path4.DeformPath();
 
+	Entity* point = EntityManager::CreateEntity();
+	point->AddComponent<Transform>();
+	Model* model = point->AddComponent<Model>();
+	model->LoadModel("Sphere.FBX");
+	point->AddComponent<PathPoint>();
+
 	// Draw in wireframe
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	
@@ -105,6 +114,7 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Update objects
+		EntityManager::UpdateAll();
 		path1.Update(deltaTime);
 		path2.Update(deltaTime);
 		path3.Update(deltaTime);
@@ -124,6 +134,7 @@ int main()
 		shader.SetUniform("ambient", 0.1f, 0.1f, 0.1f);
 		shader.SetUniform("lightColor", 1.0f, 1.0f, 1.0f);
 		shader.SetUniform("lightDir", 1.0f, 1.0f, 1.0f);
+		EntityManager::DrawAll();
 		//bMesh1.Draw();
 		//bMesh2.Draw();
 		//bMesh3.Draw();

@@ -8,25 +8,23 @@
 #include <GL/glew.h>
 #include "Image.h"
 
-using namespace std;
-
 class Mesh
 {
 public:
 	GLenum drawMode = GL_TRIANGLES;
-	vector<glm::vec3> vertices;
-	vector<glm::vec3> normals;
-	vector<glm::vec2> uvs;
-	vector<glm::vec3> colors;
-	vector<GLuint> indices;
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec3> normals;
+	std::vector<glm::vec2> uvs;
+	std::vector<glm::vec3> colors;
+	std::vector<GLuint> indices;
 
 	Mesh();
 	~Mesh();
-	void SetVertices(vector<glm::vec3>& verts);
-	void SetNormals(vector<glm::vec3>& normals);
-	void SetUvs(vector<glm::vec2>& uvs);
-	void SetVertexColors(vector<glm::vec3>& colors);
-	void SetIndices(vector<GLuint>& indices);
+	void SetVertices(std::vector<glm::vec3>& verts);
+	void SetNormals(std::vector<glm::vec3>& normals);
+	void SetUvs(std::vector<glm::vec2>& uvs);
+	void SetVertexColors(std::vector<glm::vec3>& colors);
+	void SetIndices(std::vector<GLuint>& indices);
 	void SetTexture(const char* imgFile);
 	void Draw();
 

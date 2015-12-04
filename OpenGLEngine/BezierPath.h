@@ -31,13 +31,13 @@ private:
 	Model pathModel;
 	Model* pointModel;
 	//vec3* selectedPoint = 0;
-	vector<vec3*> selectedPoints;
-	vector<vec3> pointOffsets; // Offset from plane to object positions
+	std::vector<vec3*> selectedPoints;
+	std::vector<vec3> pointOffsets; // Offset from plane to object positions
 	vec3 planePos;
 	bool useHeightPlane;
 
 	int GetNumSegments();
-	bool RaycastPoints(RaycastHit& hit, vector<vec3*>& selectedPoints);
+	bool RaycastPoints(RaycastHit& hit, std::vector<vec3*>& selectedPoints);
 };
 
 #endif

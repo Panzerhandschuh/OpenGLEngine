@@ -9,23 +9,22 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include "Mesh.h"
+#include "Component.h"
 
-using namespace std;
-
-class Model
+class Model : public Component
 {
 public:
-	vector<Mesh*> meshes;
+	std::vector<Mesh*> meshes;
 
 	Model();
-	Model(string path);
+	Model(std::string path);
 	~Model();
-	void LoadModel(string path);
+	void LoadModel(std::string path);
 	Mesh* AddMesh();
 	void Draw();
 
 private:
-	string directory;
+	std::string directory;
 	
 	void ProcessNode(aiNode* node, const aiScene* scene);
 	Mesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
