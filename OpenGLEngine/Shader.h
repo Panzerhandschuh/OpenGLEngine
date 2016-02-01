@@ -16,6 +16,7 @@ public:
 	void Use();
 	void SetUniform(const char* uniformName, GLfloat v0, GLfloat v1, GLfloat v2);
 	void SetUniform(const char* uniformName, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3);
+	void SetUniform(const char* uniformName, const glm::vec3& vec);
 	void SetUniform(const char* uniformName, const glm::mat4& mat);
 
 private:

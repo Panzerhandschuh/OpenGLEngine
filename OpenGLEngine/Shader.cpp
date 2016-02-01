@@ -1,5 +1,7 @@
 #include "Shader.h"
 
+using namespace glm;
+
 Shader::Shader(const char* vertShaderFile, const char* fragShaderFile)
 {
 	// Create shaders
@@ -53,6 +55,12 @@ void Shader::SetUniform(const char* uniformName, GLfloat v0, GLfloat v1, GLfloat
 {
 	GLint loc = glGetUniformLocation(program, uniformName);
 	glUniform4f(loc, v0, v1, v2, v3);
+}
+
+void Shader::SetUniform(const char* uniformName, const glm::vec3& vec)
+{
+	GLint loc = glGetUniformLocation(program, uniformName);
+	glUniform3f(loc, vec.x, vec.y, vec.z);
 }
 
 void Shader::SetUniform(const char* uniformName, const glm::mat4& mat)

@@ -7,14 +7,14 @@ Entity::~Entity()
 	components.clear();
 }
 
-void Entity::Update()
+void Entity::Update(GLfloat deltaTime)
 {
 	for (int i = 0; i < components.size(); i++)
-		components[i]->Update();
+		components[i]->Update(deltaTime);
 }
 
-void Entity::Draw()
+void Entity::Draw(Shader& shader)
 {
 	for (int i = 0; i < components.size(); i++)
-		components[i]->Draw();
+		components[i]->Draw(shader);
 }

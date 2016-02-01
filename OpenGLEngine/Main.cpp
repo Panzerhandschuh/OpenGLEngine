@@ -15,6 +15,7 @@
 #include "Shader.h"
 #include "BezierMesh.h"
 #include "BezierPath.h"
+#include "PathPoint.h"
 #include "Debug.h"
 
 using namespace glm;
@@ -57,7 +58,7 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	//glCullFace(GL_FRONT);
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClearColor(0.172549f, 0.235294117647f, 0.262745098f, 1.0f);
 
 	// Initialize camera
 	Camera::main.position = glm::vec3(0.0f, 2.0f, 3.0f);
@@ -76,20 +77,35 @@ int main()
 	Model track("CoasterTrack.FBX");
 
 	// Create bezier path
-	BezierPath path1(track, curve1);
-	path1.DeformPath();
-	BezierPath path2(track, curve2);
-	path2.DeformPath();
-	BezierPath path3(track, curve3);
-	path3.DeformPath();
-	BezierPath path4(track, curve4);
-	path4.DeformPath();
+	//BezierPath path1(track, curve1);
+	//path1.DeformPath();
+	//BezierPath path2(track, curve2);
+	//path2.DeformPath();
+	//BezierPath path3(track, curve3);
+	//path3.DeformPath();
+	//BezierPath path4(track, curve4);
+	//path4.DeformPath();
 
-	Entity* point = EntityManager::CreateEntity();
-	point->AddComponent<Transform>();
-	Model* model = point->AddComponent<Model>();
-	model->LoadModel("Sphere.FBX");
-	point->AddComponent<PathPoint>();
+	Entity* managers = EntityManager::CreateEntity();
+	managers->AddComponent<SelectionManager>();
+
+	Entity* point1 = EntityManager::CreateEntity();
+	PathPoint* path1 = point1->AddComponent<PathPoint>();
+	path1->Init(track, glm::vec3(0.0f, 0.0f, 0.0f));
+	
+	Entity* point2 = EntityManager::CreateEntity();
+	PathPoint* path2 = point2->AddComponent<PathPoint>();
+	path2->Init(track, glm::vec3(16.0f, 4.0f, -8.0f));
+
+	path1->next = path2;
+	path2->prev = path1;
+	path1->DeformPath();
+
+	//Entity* point = EntityManager::CreateEntity();
+	//point->AddComponent<Transform>();
+	//Model* model = point->AddComponent<Model>();
+	//model->LoadModel("Sphere.FBX");
+	//point->AddComponent<PathPoint>();
 
 	// Draw in wireframe
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -114,11 +130,11 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Update objects
-		EntityManager::UpdateAll();
-		path1.Update(deltaTime);
-		path2.Update(deltaTime);
-		path3.Update(deltaTime);
-		path4.Update(deltaTime);
+		EntityManager::UpdateAll(deltaTime);
+		//path1.Update(deltaTime);
+		//path2.Update(deltaTime);
+		//path3.Update(deltaTime);
+		//path4.Update(deltaTime);
 
 		// Create model matrix
 		glm::mat4 model;
@@ -134,15 +150,15 @@ int main()
 		shader.SetUniform("ambient", 0.1f, 0.1f, 0.1f);
 		shader.SetUniform("lightColor", 1.0f, 1.0f, 1.0f);
 		shader.SetUniform("lightDir", 1.0f, 1.0f, 1.0f);
-		EntityManager::DrawAll();
+		EntityManager::DrawAll(shader);
 		//bMesh1.Draw();
 		//bMesh2.Draw();
 		//bMesh3.Draw();
 		//bMesh4.Draw();
-		path1.Draw(shader);
-		path2.Draw(shader);
-		path3.Draw(shader);
-		path4.Draw(shader);
+		//path1.Draw(shader);
+		//path2.Draw(shader);
+		//path3.Draw(shader);
+		//path4.Draw(shader);
 
 		//model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f)); // Translate model upwards
 		//shader.SetUniform("model", model);

@@ -5,6 +5,8 @@ std::vector<Entity*> EntityManager::entities;
 Entity* EntityManager::CreateEntity()
 {
 	Entity* ent = new Entity;
+	Transform* transform = ent->AddComponent<Transform>();
+	ent->transform = transform;
 	entities.push_back(ent);
 	return ent;
 }
@@ -19,14 +21,14 @@ void EntityManager::DestroyEntity(Entity* ent)
 	}
 }
 
-void EntityManager::UpdateAll()
+void EntityManager::UpdateAll(GLfloat deltaTime)
 {
 	for (int i = 0; i < entities.size(); i++)
-		entities[i]->Update();
+		entities[i]->Update(deltaTime);
 }
 
-void EntityManager::DrawAll()
+void EntityManager::DrawAll(Shader& shader)
 {
 	for (int i = 0; i < entities.size(); i++)
-		entities[i]->Draw();
+		entities[i]->Draw(shader);
 }

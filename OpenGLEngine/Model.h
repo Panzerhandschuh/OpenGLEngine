@@ -10,8 +10,9 @@
 #include <assimp/postprocess.h>
 #include "Mesh.h"
 #include "Component.h"
+#include "Shader.h"
 
-class Model : public Component
+class Model
 {
 public:
 	std::vector<Mesh*> meshes;

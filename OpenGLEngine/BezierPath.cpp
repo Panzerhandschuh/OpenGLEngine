@@ -70,14 +70,13 @@ void BezierPath::DeformPath()
 	//cout << "Z-Axis Length: " << length << endl;
 	//cout << "Z-Axis Offset: " << offset << endl;
 
-	float curveLength = curve.GetLength();
 	int numSegments = GetNumSegments();
 	//cout << "Num Segments: " << numSegments << endl;
 
-	vector<vec3> sourceVerts = sourceMesh->vertices;
-	vector<vec3> sourceNorms = sourceMesh->normals;
-	vector<vec2> sourceUvs = sourceMesh->uvs;
-	vector<GLuint> sourceIndices = sourceMesh->indices;
+	vector<vec3>& sourceVerts = sourceMesh->vertices;
+	vector<vec3>& sourceNorms = sourceMesh->normals;
+	vector<vec2>& sourceUvs = sourceMesh->uvs;
+	vector<GLuint>& sourceIndices = sourceMesh->indices;
 	vector<vec3> vertices(sourceVerts.size() * numSegments);
 	vector<vec3> normals(sourceNorms.size() * numSegments);
 	vector<vec2> uvs(sourceUvs.size() * numSegments);

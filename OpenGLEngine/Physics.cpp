@@ -1,5 +1,13 @@
 #include "Physics.h"
 
+using namespace std;
+using namespace glm;
+
+RaycastHit::RaycastHit()
+{
+	entity = 0;
+}
+
 vec3 Physics::GetRayFromMouse()
 {
 	// Screen space
@@ -18,6 +26,31 @@ vec3 Physics::GetRayFromMouse()
 	// World space
 	vec3 rayWorld = vec3(inverse(Camera::main.view) * rayEye);
 	return normalize(rayWorld);
+}
+
+bool Physics::RaycastScene(vec3 rayPos, vec3 rayDir, RaycastHit& hit)
+{
+	float minDist = numeric_limits<float>::max();
+	vector<Entity*> entities = EntityManager::entities;
+	for (int i = 0; i < entities.size(); i++)
+	{
+		Entity* ent = entities[i];
+		SphereCollider* collider = ent->GetComponent<SphereCollider>();
+		if (collider) // Only raycast sphere colliders
+		{
+			if (Physics::RaycastSphere(rayPos, rayDir, ent->transform->position, collider->radius, hit))
+			{
+				cout << "Hit Sphere: " << hit.point.x << ", " << hit.point.y << ", " << hit.point.z << endl;
+				if (hit.distance < minDist)
+				{
+					minDist = hit.distance;
+					hit.entity = ent;
+				}
+			}
+		}
+	}
+
+	return (hit.entity != 0);
 }
 
 bool Physics::RaycastPlane(vec3 rayPos, vec3 rayDir, vec3 planePos, vec3 planeNorm, RaycastHit& hit)
