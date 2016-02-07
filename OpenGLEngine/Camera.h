@@ -14,6 +14,7 @@ public:
 
 	GLfloat sensitivity = 0.125f;
 	GLfloat speed = 15.0f;
+	GLfloat fastSpeed = 45.0f;
 	glm::vec3 position;
 	glm::mat4 view;
 	glm::mat4 proj;

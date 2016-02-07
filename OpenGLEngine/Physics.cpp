@@ -28,13 +28,16 @@ vec3 Physics::GetRayFromMouse()
 	return normalize(rayWorld);
 }
 
-bool Physics::RaycastScene(vec3 rayPos, vec3 rayDir, RaycastHit& hit)
+bool Physics::RaycastScene(vec3 rayPos, vec3 rayDir, RaycastHit& hit, int layer)
 {
 	float minDist = numeric_limits<float>::max();
 	vector<Entity*> entities = EntityManager::entities;
 	for (int i = 0; i < entities.size(); i++)
 	{
 		Entity* ent = entities[i];
+		if (!ent->enabled || ent->layer != layer)
+			continue;
+
 		SphereCollider* collider = ent->GetComponent<SphereCollider>();
 		if (collider) // Only raycast sphere colliders
 		{

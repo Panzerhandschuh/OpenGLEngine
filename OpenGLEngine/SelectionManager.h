@@ -14,6 +14,7 @@ class SelectionManager : public Component
 public:
 	static SelectionManager* instance;
 	Entity* selectedEnt;
+	Entity* selectedHandle;
 
 	void Start();
 	void Update(GLfloat deltaTime);
@@ -21,7 +22,10 @@ public:
 private:
 	glm::vec3 selectionOffset; // Offset from plane to entity position
 	glm::vec3 planePos;
+	glm::vec3 lastMove;
 	bool useHeightPlane;
+
+	void HandleSelection(RaycastHit& hit);
 };
 
 #endif

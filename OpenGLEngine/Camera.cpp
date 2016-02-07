@@ -11,18 +11,19 @@ Camera::Camera()
 void Camera::Update(GLfloat deltaTime)
 {
 	// Move camera
+	GLfloat camSpeed = (InputManager::GetKey(GLFW_KEY_LEFT_SHIFT)) ? fastSpeed : speed;
 	if (InputManager::GetKey(GLFW_KEY_W))
-		position += speed * -GetForward() * deltaTime;
+		position += camSpeed * -GetForward() * deltaTime;
 	if (InputManager::GetKey(GLFW_KEY_S))
-		position += speed * GetForward() * deltaTime;
+		position += camSpeed * GetForward() * deltaTime;
 	if (InputManager::GetKey(GLFW_KEY_A))
-		position += speed * -GetRight() * deltaTime;
+		position += camSpeed * -GetRight() * deltaTime;
 	if (InputManager::GetKey(GLFW_KEY_D))
-		position += speed * GetRight() * deltaTime;
+		position += camSpeed * GetRight() * deltaTime;
 	if (InputManager::GetKey(GLFW_KEY_Q))
-		position += speed * -GetUp() * deltaTime;
+		position += camSpeed * -GetUp() * deltaTime;
 	if (InputManager::GetKey(GLFW_KEY_E))
-		position += speed * GetUp() * deltaTime;
+		position += camSpeed * GetUp() * deltaTime;
 
 	// Mouse look
 	if (InputManager::GetMouseButton(GLFW_MOUSE_BUTTON_RIGHT))

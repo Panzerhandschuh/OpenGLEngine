@@ -161,9 +161,9 @@ void BezierPath::Draw(Shader& shader)
 	pointModel->Draw();
 
 	// Draw line segments
-	//Debug::DrawLine(curve.p0, curve.p1);
-	//Debug::DrawLine(curve.p1, curve.p2);
-	//Debug::DrawLine(curve.p2, curve.p3);
+	//LineUtil::DrawLine(curve.p0, curve.p1);
+	//LineUtil::DrawLine(curve.p1, curve.p2);
+	//LineUtil::DrawLine(curve.p2, curve.p3);
 }
 
 int BezierPath::GetNumSegments()
@@ -184,7 +184,7 @@ bool BezierPath::RaycastPoints(RaycastHit& hit, std::vector<vec3*>& selectedPoin
 {
 	vec3 rayPos = Camera::main.position;
 	vec3 rayDir = Physics::GetRayFromMouse();
-	//Debug::DrawRay(vec3(0.0f, 0.0f, 2.0f), rayDir * 5.0f);
+	//LineUtil::DrawRay(vec3(0.0f, 0.0f, 2.0f), rayDir * 5.0f);
 	RaycastHit hit1, hit2, hit3, hit4;
 	float minDist = std::numeric_limits<float>::max();
 	vec3* controlPoint = 0;

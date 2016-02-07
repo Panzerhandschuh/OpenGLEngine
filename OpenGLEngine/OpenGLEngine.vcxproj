@@ -73,7 +73,7 @@
     <ClCompile Include="BezierPath.cpp" />
     <ClCompile Include="Bounds.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="LineUtil.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityManager.cpp" />
@@ -84,6 +84,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="PathPoint.cpp" />
+    <ClCompile Include="PathPointHandle.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="SelectionManager.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -96,7 +97,7 @@
     <ClInclude Include="Bounds.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
-    <ClInclude Include="Debug.h" />
+    <ClInclude Include="LineUtil.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
@@ -107,6 +108,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelRenderer.h" />
     <ClInclude Include="PathPoint.h" />
+    <ClInclude Include="PathPointHandle.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="SelectionManager.h" />
     <ClInclude Include="Shader.h" />

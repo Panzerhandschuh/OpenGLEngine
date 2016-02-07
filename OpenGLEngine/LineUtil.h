@@ -1,5 +1,5 @@
-#ifndef DEBUG_H
-#define DEBUG_H
+#ifndef LINEUTIL_H
+#define LINEUTIL_H
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
@@ -8,7 +8,7 @@
 
 using namespace glm;
 
-class Debug
+class LineUtil
 {
 public:
 	static void DrawRay(vec3 pos, vec3 dir);

@@ -10,6 +10,18 @@ void PathPoint::Start()
 
 	SphereCollider* collider = entity->AddComponent<SphereCollider>();
 	collider->radius = 1.0f;
+
+	// Create start and end bezier handles
+	Entity* start = EntityManager::CreateEntity();
+	PathPointHandle* startHandle = start->AddComponent<PathPointHandle>();
+	this->startHandle = start->transform;
+
+	Entity* end = EntityManager::CreateEntity();
+	PathPointHandle* endHandle = end->AddComponent<PathPointHandle>();
+	this->endHandle = end->transform;
+
+	startHandle->otherHandle = this->endHandle;
+	endHandle->otherHandle = this->startHandle;
 }
 
 PathPoint::~PathPoint()
@@ -19,35 +31,60 @@ PathPoint::~PathPoint()
 
 void PathPoint::Update(GLfloat deltaTime)
 {
-	if (SelectionManager::instance->selectedEnt == entity) // This point is selected
-	{
-
-	}
+	bool isSelected = (SelectionManager::instance->selectedEnt == entity);
+	startHandle->entity->enabled = isSelected;
+	endHandle->entity->enabled = isSelected;
 }
 
 void PathPoint::Draw(Shader& shader)
 {
 	shader.Use();
+
+	// Draw model
 	mat4 model;
 	shader.SetUniform("objectColor", 1.0f, 1.0f, 1.0f);
 	shader.SetUniform("model", model);
 	pathModel.Draw();
 
-	// Draw bezier control points
-	vec3 color = (SelectionManager::instance->selectedEnt == entity) ? vec3(0.0f, 0.5f, 1.0f) : vec3(0.0f, 1.0f, 0.0f);
+	// Draw point
+	bool isSelected = (SelectionManager::instance->selectedEnt == entity);
+	vec3 color = (isSelected) ? vec3(0.0f, 0.5f, 1.0f) : vec3(0.0f, 1.0f, 0.0f);
 	shader.SetUniform("objectColor", color);
 	model = translate(mat4(1.0f), transform->position);
 	model = scale(model, vec3(2.0f));
 	shader.SetUniform("model", model);
 	pointModel->Draw();
+
+	if (isSelected)
+	{
+		// Draw tangent points
+		bool isStartSelected = (SelectionManager::instance->selectedHandle == startHandle->entity);
+		vec3 startcolor = (isStartSelected) ? vec3(1.0f, 1.0f, 0.0f) : vec3(1.0f, 1.0f, 1.0f);
+		shader.SetUniform("objectColor", startcolor);
+		model = translate(mat4(1.0f), startHandle->position);
+		model = scale(model, vec3(1.0f));
+		shader.SetUniform("model", model);
+		pointModel->Draw();
+
+		bool isEndSelected = (SelectionManager::instance->selectedHandle == endHandle->entity);
+		vec3 endcolor = (isEndSelected) ? vec3(1.0f, 1.0f, 0.0f) : vec3(1.0f, 1.0f, 1.0f);
+		shader.SetUniform("objectColor", endcolor);
+		model = translate(mat4(1.0f), endHandle->position);
+		shader.SetUniform("model", model);
+		pointModel->Draw();
+
+		// Draw tangent lines
+		LineUtil::DrawLine(transform->position, startHandle->position);
+		LineUtil::DrawLine(transform->position, endHandle->position);
+	}
 }
 
 void PathPoint::Init(Model& sourceModel, glm::vec3 pos)
 {
 	this->sourceModel = &sourceModel;
 	transform->position = pos;
-	startTang = transform->position + vec3(-5.0f, 0.0f, 0.0f);
-	endTang = transform->position + vec3(5.0f, 0.0f, 0.0f);
+	startHandle->position = transform->position + vec3(-5.0f, 0.0f, 0.0f);
+	endHandle->position = transform->position + vec3(5.0f, 0.0f, 0.0f);
 }
 
 void PathPoint::DeformPath()
@@ -60,7 +97,7 @@ void PathPoint::DeformPath()
 
 	Mesh* sourceMesh = sourceModel->meshes[0];
 	Bounds bounds(*sourceMesh);
-	BezierCurve curve(transform->position, endTang, next->startTang, next->transform->position);
+	BezierCurve curve(transform->position, endHandle->position, next->startHandle->position, next->transform->position);
 
 	float meshLength = bounds.size[DEFORM_AXIS];
 	float offset = -(bounds.center[DEFORM_AXIS] - (meshLength / 2));
@@ -130,6 +167,12 @@ void PathPoint::DeformPath()
 	pathMesh->SetNormals(normals);
 	pathMesh->SetUvs(uvs);
 	pathMesh->SetIndices(indices);
+}
+
+void PathPoint::UpdateHandles(glm::vec3 moveDelta)
+{
+	startHandle->position += moveDelta;
+	endHandle->position += moveDelta;
 }
 
 int PathPoint::GetNumSegments(BezierCurve& curve)

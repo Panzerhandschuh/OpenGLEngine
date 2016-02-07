@@ -13,6 +13,8 @@ class Entity
 {
 public:
 	Transform* transform;
+	bool enabled = true;
+	int layer = 0;
 
 	~Entity();
 	void Update(GLfloat deltaTime);

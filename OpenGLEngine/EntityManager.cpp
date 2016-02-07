@@ -24,11 +24,17 @@ void EntityManager::DestroyEntity(Entity* ent)
 void EntityManager::UpdateAll(GLfloat deltaTime)
 {
 	for (int i = 0; i < entities.size(); i++)
-		entities[i]->Update(deltaTime);
+	{
+		if (entities[i]->enabled)
+			entities[i]->Update(deltaTime);
+	}
 }
 
 void EntityManager::DrawAll(Shader& shader)
 {
 	for (int i = 0; i < entities.size(); i++)
-		entities[i]->Draw(shader);
+	{
+		if (entities[i]->enabled)
+			entities[i]->Draw(shader);
+	}
 }

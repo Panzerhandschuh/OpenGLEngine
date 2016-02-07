@@ -16,7 +16,7 @@
 #include "BezierMesh.h"
 #include "BezierPath.h"
 #include "PathPoint.h"
-#include "Debug.h"
+#include "LineUtil.h"
 
 using namespace glm;
 

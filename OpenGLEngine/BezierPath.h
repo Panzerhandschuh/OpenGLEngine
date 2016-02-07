@@ -7,7 +7,7 @@
 #include "BezierCurve.h"
 #include "InputManager.h"
 #include "Physics.h"
-#include "Debug.h"
+#include "LineUtil.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 

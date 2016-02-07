@@ -57,9 +57,6 @@
     <ClCompile Include="Physics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Debug.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PathPoint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -70,6 +67,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SelectionManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPointHandle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LineUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -122,9 +125,6 @@
     <ClInclude Include="Physics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Debug.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PathPoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -144,6 +144,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SelectionManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPointHandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LineUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

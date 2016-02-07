@@ -11,6 +11,8 @@
 #include "InputManager.h"
 #include "SelectionManager.h"
 #include "Bounds.h"
+#include "PathPointHandle.h"
+#include "LineUtil.h"
 
 #define DEFORM_AXIS 2
 #define MAX_PATH_VERTS 65535
@@ -20,10 +22,8 @@ class PathPoint : public Component
 public:
 	PathPoint* prev;
 	PathPoint* next;
-	//Transform* startTang;
-	//Transform* endTang;
-	glm::vec3 startTang;
-	glm::vec3 endTang;
+	Transform* startHandle;
+	Transform* endHandle;
 
 	void Start();
 	~PathPoint();
@@ -31,6 +31,7 @@ public:
 	void Draw(Shader& shader);
 	void Init(Model& sourceModel, glm::vec3 pos);
 	void DeformPath();
+	void UpdateHandles(glm::vec3 moveDelta);
 
 private:
 	Model* sourceModel;

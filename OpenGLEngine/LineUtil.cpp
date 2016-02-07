@@ -1,11 +1,11 @@
-#include "Debug.h"
+#include "LineUtil.h"
 
-void Debug::DrawRay(vec3 pos, vec3 dir)
+void LineUtil::DrawRay(vec3 pos, vec3 dir)
 {
 	DrawLine(pos, pos + dir);
 }
 
-void Debug::DrawLine(vec3 v1, vec3 v2)
+void LineUtil::DrawLine(vec3 v1, vec3 v2)
 {
 	vec3 verts[2];
 	verts[0] = v1;
