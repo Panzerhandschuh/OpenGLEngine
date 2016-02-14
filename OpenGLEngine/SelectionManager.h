@@ -26,6 +26,9 @@ private:
 	bool useHeightPlane;
 
 	void HandleSelection(RaycastHit& hit);
+	void RotateSelection();
+	void MoveSelection();
+	void CreatePathPoint();
 };
 
 #endif

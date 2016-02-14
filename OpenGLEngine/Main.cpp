@@ -64,23 +64,23 @@ int main()
 	Camera::main.position = glm::vec3(0.0f, 2.0f, 3.0f);
 
 	// Create bezier meshes
-	BezierCurve curve1(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(8.0f, 0.0f, 0.0f), glm::vec3(8.0f, 4.0f, -8.0f), glm::vec3(16.0f, 4.0f, -8.0f));
+	//BezierCurve curve1(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(8.0f, 0.0f, 0.0f), glm::vec3(8.0f, 4.0f, -8.0f), glm::vec3(16.0f, 4.0f, -8.0f));
 	//BezierMesh bMesh1(curve1);
-	BezierCurve curve2(glm::vec3(16.0f, 4.0f, -8.0f), glm::vec3(20.0f, 4.0f, -8.0f), glm::vec3(24.0f, 0.0f, -12.0f), glm::vec3(24.0f, 0.0f, -16.0f));
+	//BezierCurve curve2(glm::vec3(16.0f, 4.0f, -8.0f), glm::vec3(20.0f, 4.0f, -8.0f), glm::vec3(24.0f, 0.0f, -12.0f), glm::vec3(24.0f, 0.0f, -16.0f));
 	//BezierMesh bMesh2(curve2);
-	BezierCurve curve3(glm::vec3(24.0f, 0.0f, -16.0f), glm::vec3(24.0f, 0.0f, -32.0f), glm::vec3(8.0f, 0.0f, -12.0f), glm::vec3(0.0f, 0.0f, -12.0f));
+	//BezierCurve curve3(glm::vec3(24.0f, 0.0f, -16.0f), glm::vec3(24.0f, 0.0f, -32.0f), glm::vec3(8.0f, 0.0f, -12.0f), glm::vec3(0.0f, 0.0f, -12.0f));
 	//BezierMesh bMesh3(curve3);
-	BezierCurve curve4(glm::vec3(0.0f, 0.0f, -12.0f), glm::vec3(-12.0f, 0.0f, -12.0f), glm::vec3(-12.0f, 0.0f, 0), glm::vec3(0.0f, 0.0f, 0.0f));
+	//BezierCurve curve4(glm::vec3(0.0f, 0.0f, -12.0f), glm::vec3(-12.0f, 0.0f, -12.0f), glm::vec3(-12.0f, 0.0f, 0), glm::vec3(0.0f, 0.0f, 0.0f));
 	//BezierMesh bMesh4(curve4);
 
 	// Create model
 	Model track("CoasterTrack.FBX");
 
 	// Create bezier path
-	//BezierPath path1(track, curve1);
-	//path1.DeformPath();
-	//BezierPath path2(track, curve2);
-	//path2.DeformPath();
+	//BezierPath point1(track, curve1);
+	//point1.DeformPath();
+	//BezierPath point2(track, curve2);
+	//point2.DeformPath();
 	//BezierPath path3(track, curve3);
 	//path3.DeformPath();
 	//BezierPath path4(track, curve4);
@@ -89,17 +89,17 @@ int main()
 	Entity* managers = EntityManager::CreateEntity();
 	managers->AddComponent<SelectionManager>();
 
-	Entity* point1 = EntityManager::CreateEntity();
-	PathPoint* path1 = point1->AddComponent<PathPoint>();
-	path1->Init(track, glm::vec3(0.0f, 0.0f, 0.0f));
+	Entity* ent1 = EntityManager::CreateEntity();
+	PathPoint* point1 = ent1->AddComponent<PathPoint>();
+	point1->Init(track, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	
-	Entity* point2 = EntityManager::CreateEntity();
-	PathPoint* path2 = point2->AddComponent<PathPoint>();
-	path2->Init(track, glm::vec3(16.0f, 4.0f, -8.0f));
+	Entity* ent2 = EntityManager::CreateEntity();
+	PathPoint* point2 = ent2->AddComponent<PathPoint>();
+	point2->Init(track, glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-	path1->next = path2;
-	path2->prev = path1;
-	path1->DeformPath();
+	point1->next = point2;
+	point2->prev = point1;
+	point1->DeformPath();
 
 	//Entity* point = EntityManager::CreateEntity();
 	//point->AddComponent<Transform>();
@@ -131,8 +131,8 @@ int main()
 
 		// Update objects
 		EntityManager::UpdateAll(deltaTime);
-		//path1.Update(deltaTime);
-		//path2.Update(deltaTime);
+		//point1.Update(deltaTime);
+		//point2.Update(deltaTime);
 		//path3.Update(deltaTime);
 		//path4.Update(deltaTime);
 
@@ -155,8 +155,8 @@ int main()
 		//bMesh2.Draw();
 		//bMesh3.Draw();
 		//bMesh4.Draw();
-		//path1.Draw(shader);
-		//path2.Draw(shader);
+		//point1.Draw(shader);
+		//point2.Draw(shader);
 		//path3.Draw(shader);
 		//path4.Draw(shader);
 

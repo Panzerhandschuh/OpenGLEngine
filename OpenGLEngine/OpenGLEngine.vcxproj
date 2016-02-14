@@ -86,8 +86,10 @@
     <ClCompile Include="PathPoint.cpp" />
     <ClCompile Include="PathPointHandle.cpp" />
     <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="QuaternionUtil.cpp" />
     <ClCompile Include="SelectionManager.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
@@ -110,6 +112,7 @@
     <ClInclude Include="PathPoint.h" />
     <ClInclude Include="PathPointHandle.h" />
     <ClInclude Include="Physics.h" />
+    <ClInclude Include="QuaternionUtil.h" />
     <ClInclude Include="SelectionManager.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SphereCollider.h" />

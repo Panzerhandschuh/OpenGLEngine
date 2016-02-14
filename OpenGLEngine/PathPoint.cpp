@@ -79,12 +79,12 @@ void PathPoint::Draw(Shader& shader)
 	}
 }
 
-void PathPoint::Init(Model& sourceModel, glm::vec3 pos)
+void PathPoint::Init(Model& sourceModel, vec3 pos, vec3 dir)
 {
 	this->sourceModel = &sourceModel;
 	transform->position = pos;
-	startHandle->position = transform->position + vec3(-5.0f, 0.0f, 0.0f);
-	endHandle->position = transform->position + vec3(5.0f, 0.0f, 0.0f);
+	startHandle->position = transform->position + (-5.0f * dir);
+	endHandle->position = transform->position + (5.0f * dir);
 }
 
 void PathPoint::DeformPath()
@@ -136,7 +136,11 @@ void PathPoint::DeformPath()
 
 			// Rotation
 			vec3 tang = curve.GetTangent(percentLength);
-			vec3 up(0.0f, 1.0f, 0.0f);
+			quat startRot = angleAxis(angle, GetDirection());
+			quat endRot = angleAxis(next->angle, next->GetDirection());
+			quat sRot = slerp(startRot, endRot, percentLength);
+			//quat sRot = slerp(transform->rotation, next->transform->rotation, percentLength);
+			vec3 up = QuaternionUtil::GetUp(sRot);
 			vec3 biNormal = cross(up, tang);
 			vec3 norm = cross(tang, biNormal);
 			mat4 curveRot(biNormal.x, biNormal.y, biNormal.z, 0.0f,
@@ -173,6 +177,26 @@ void PathPoint::UpdateHandles(glm::vec3 moveDelta)
 {
 	startHandle->position += moveDelta;
 	endHandle->position += moveDelta;
+}
+
+bool PathPoint::IsStartPoint()
+{
+	return (!prev);
+}
+
+bool PathPoint::IsEndPoint()
+{
+	return (!next);
+}
+
+bool PathPoint::IsIntermediatePoint()
+{
+	return (next && prev);
+}
+
+vec3 PathPoint::GetDirection()
+{
+	return normalize(endHandle->position - startHandle->position);
 }
 
 int PathPoint::GetNumSegments(BezierCurve& curve)
