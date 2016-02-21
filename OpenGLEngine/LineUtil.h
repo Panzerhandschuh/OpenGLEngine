@@ -1,7 +1,6 @@
 #ifndef LINEUTIL_H
 #define LINEUTIL_H
 
-#include <GL/glew.h>
 #include <glm/glm.hpp>
 #include "Shader.h"
 #include "Camera.h"

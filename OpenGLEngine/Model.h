@@ -17,7 +17,7 @@ class Model
 public:
 	std::vector<Mesh*> meshes;
 
-	Model();
+	Model() { }
 	Model(std::string path);
 	~Model();
 	void LoadModel(std::string path);

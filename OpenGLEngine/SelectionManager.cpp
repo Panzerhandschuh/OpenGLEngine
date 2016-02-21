@@ -150,7 +150,7 @@ void SelectionManager::CreatePathPoint()
 			point->prev = newPoint;
 			newPoint->next = point;
 		}
-		newPoint->Init(*point->sourceModel, hit.point, dir);
+		newPoint->Init(*point->sourceModel, point->crossSections, hit.point, dir);
 		newPoint->DeformPath();
 
 		selectedEnt = newPoint->entity;

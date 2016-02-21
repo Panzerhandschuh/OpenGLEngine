@@ -73,6 +73,7 @@
     <ClCompile Include="BezierPath.cpp" />
     <ClCompile Include="Bounds.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CrossSection.cpp" />
     <ClCompile Include="LineUtil.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -80,6 +81,7 @@
     <ClCompile Include="FileUtil.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="MathUtil.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -99,6 +101,7 @@
     <ClInclude Include="Bounds.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="CrossSection.h" />
     <ClInclude Include="LineUtil.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Entity.h" />
@@ -106,6 +109,7 @@
     <ClInclude Include="FileUtil.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="MathUtil.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelRenderer.h" />

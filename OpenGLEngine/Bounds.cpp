@@ -6,7 +6,7 @@ Bounds::Bounds(Model& model)
 	glm::vec3 max(std::numeric_limits<float>::min());
 	for (int i = 0; i < model.meshes.size(); i++)
 	{
-		std::vector<glm::vec3> vertices = model.meshes[i]->vertices;
+		std::vector<glm::vec3>& vertices = model.meshes[i]->vertices;
 		for (int j = 0; j < vertices.size(); j++)
 		{
 			for (int k = 0; k < 3; k++)
@@ -28,7 +28,7 @@ Bounds::Bounds(Mesh& mesh)
 {
 	glm::vec3 min(std::numeric_limits<float>::max());
 	glm::vec3 max(std::numeric_limits<float>::min());
-	std::vector<glm::vec3> vertices = mesh.vertices;
+	std::vector<glm::vec3>& vertices = mesh.vertices;
 	for (int i = 0; i < vertices.size(); i++)
 	{
 		for (int j = 0; j < 3; j++)

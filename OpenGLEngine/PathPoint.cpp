@@ -79,9 +79,10 @@ void PathPoint::Draw(Shader& shader)
 	}
 }
 
-void PathPoint::Init(Model& sourceModel, vec3 pos, vec3 dir)
+void PathPoint::Init(Model& sourceModel, vector<CrossSection>& crossSections, vec3 pos, vec3 dir)
 {
 	this->sourceModel = &sourceModel;
+	this->crossSections = crossSections;
 	transform->position = pos;
 	startHandle->position = transform->position + (-5.0f * dir);
 	endHandle->position = transform->position + (5.0f * dir);
@@ -115,6 +116,10 @@ void PathPoint::DeformPath()
 	vector<vec3> normals(sourceNorms.size() * numSegments);
 	vector<vec2> uvs(sourceUvs.size() * numSegments);
 	vector<GLuint> indices(sourceIndices.size() * numSegments);
+
+	vec3 point;
+	mat4 rotation;
+
 	for (int segment = 0; segment < numSegments; segment++)
 	{
 		// Calculate index information
@@ -124,42 +129,45 @@ void PathPoint::DeformPath()
 			indices[currentIndex] = sourceIndices[i] + (segment * sourceVerts.size());
 		}
 
-		// Calculate vertex information
-		for (int i = 0; i < sourceVerts.size(); i++)
+		for (int i = 0; i < crossSections.size(); i++)
 		{
-			float vPos = sourceVerts[i][DEFORM_AXIS] + offset;
-			float t = vPos / meshLength; // Get normalized vertex coordinate in [0, 1] range
-			float percentLength = (t + segment) / numSegments;
+			float tValue = crossSections[i].tValue;
+			float percentLength = ((tValue + segment) / numSegments);
 
-			// Position
-			vec3 bPos = curve.GetPoint(percentLength);
+			if (segment == 0 || i != 0) // Don't recalc the point or rotation for the first cross section of a new segment since it uses the same values as the previous cross section
+			{
+				point = curve.GetPoint(percentLength);
 
-			// Rotation
-			vec3 tang = curve.GetTangent(percentLength);
-			quat startRot = angleAxis(angle, GetDirection());
-			quat endRot = angleAxis(next->angle, next->GetDirection());
-			quat sRot = slerp(startRot, endRot, percentLength);
-			//quat sRot = slerp(transform->rotation, next->transform->rotation, percentLength);
-			vec3 up = QuaternionUtil::GetUp(sRot);
-			vec3 biNormal = cross(up, tang);
-			vec3 norm = cross(tang, biNormal);
-			mat4 curveRot(biNormal.x, biNormal.y, biNormal.z, 0.0f,
-				norm.x, norm.y, norm.z, 0.0f,
-				tang.x, tang.y, tang.z, 0.0f,
-				0.0f, 0.0f, 0.0f, 1.0f);
+				vec3 tang = curve.GetTangent(percentLength);
+				quat startRot = angleAxis(angle, GetDirection());
+				quat endRot = angleAxis(next->angle, next->GetDirection());
+				quat sRot = slerp(startRot, endRot, percentLength);
+				vec3 up = QuaternionUtil::GetUp(sRot);
+				vec3 biNormal = cross(up, tang);
+				vec3 norm = cross(tang, biNormal);
+				rotation = mat4(biNormal.x, biNormal.y, biNormal.z, 0.0f,
+					norm.x, norm.y, norm.z, 0.0f,
+					tang.x, tang.y, tang.z, 0.0f,
+					0.0f, 0.0f, 0.0f, 1.0f);
+			}
 
-			// Get new index
-			int currentIndex = i + (segment * sourceMesh->vertices.size());
+			vector<int>& indices = crossSections[i].indices;
+			for (int j = 0; j < indices.size(); j++)
+			{
+				// Get new index
+				int index = indices[j];
+				int currentIndex = index + (segment * sourceVerts.size());
 
-			// Rotate normal
-			normals[currentIndex] = (vec3)(curveRot * vec4(sourceNorms[i], 0.0f));
+				// Rotate normal
+				normals[currentIndex] = (vec3)(rotation * vec4(sourceNorms[index], 0.0f));
 
-			// Position and rotate vertex
-			vec3 vNew = sourceVerts[i]; // Create a temporary vector for rotating and positioning the transformed vertex
-			vNew[DEFORM_AXIS] = 0.0f; // Set deform axis coordinate to 0 so the vertex is rotated relative to the curve
-			vNew = (vec3)(curveRot * vec4(vNew, 0.0f));
-			vNew += bPos;
-			vertices[currentIndex] = vNew;
+				// Position and rotate vertex
+				vec3 vNew = sourceVerts[index]; // Create a temporary vector for rotating and positioning the transformed vertex
+				vNew[DEFORM_AXIS] = 0.0f; // Set deform axis coordinate to 0 so the vertex is rotated relative to the curve
+				vNew = (vec3)(rotation * vec4(vNew, 0.0f));
+				vNew += point;
+				vertices[currentIndex] = vNew;
+			}
 		}
 
 		int offset = segment * sourceUvs.size();

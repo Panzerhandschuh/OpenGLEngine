@@ -17,8 +17,10 @@
 #include "BezierPath.h"
 #include "PathPoint.h"
 #include "LineUtil.h"
+#include "CrossSection.h"
 
 using namespace glm;
+using namespace std;
 
 GLfloat lastFrame = 0.0f;
 GLfloat deltaTime = 0.0f;
@@ -75,6 +77,7 @@ int main()
 
 	// Create model
 	Model track("CoasterTrack.FBX");
+	vector<CrossSection> crossSections = CrossSection::GetCrossSections(*track.meshes[0]);
 
 	// Create bezier path
 	//BezierPath point1(track, curve1);
@@ -91,11 +94,11 @@ int main()
 
 	Entity* ent1 = EntityManager::CreateEntity();
 	PathPoint* point1 = ent1->AddComponent<PathPoint>();
-	point1->Init(track, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	point1->Init(track, crossSections, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	
 	Entity* ent2 = EntityManager::CreateEntity();
 	PathPoint* point2 = ent2->AddComponent<PathPoint>();
-	point2->Init(track, glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	point2->Init(track, crossSections, glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
 	point1->next = point2;
 	point2->prev = point1;
