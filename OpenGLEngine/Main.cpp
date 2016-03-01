@@ -18,6 +18,7 @@
 #include "PathPoint.h"
 #include "LineUtil.h"
 #include "CrossSection.h"
+#include "MeshExporter.h"
 
 using namespace glm;
 using namespace std;
@@ -125,6 +126,22 @@ int main()
 
 		// Update keyboard/mouse input
 		InputManager::Update();
+
+		// Save scene to obj
+		if (InputManager::GetKey(GLFW_KEY_LEFT_CONTROL) && InputManager::GetKeyDown(GLFW_KEY_S))
+		{
+			int count = 0;
+			for (int i = 0; i < EntityManager::entities.size(); i++)
+			{
+				PathPoint* point = EntityManager::entities[i]->GetComponent<PathPoint>();
+				if (point && !point->IsEnd())
+				{
+					// Save mesh
+					MeshExporter::Export("Mesh" + to_string(count) + ".obj", *point->pathModel.meshes[0]);
+					count++;
+				}
+			}
+		}
 
 		// Update camera
 		Camera::main.Update(deltaTime);

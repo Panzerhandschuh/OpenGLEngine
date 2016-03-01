@@ -122,7 +122,7 @@ void SelectionManager::MoveSelection()
 void SelectionManager::CreatePathPoint()
 {
 	PathPoint* point = selectedEnt->GetComponent<PathPoint>();
-	if (!point || point->IsIntermediatePoint())
+	if (!point || point->IsIntermediate())
 		return;
 
 	vec3 rayPos = Camera::main.position;
@@ -136,7 +136,7 @@ void SelectionManager::CreatePathPoint()
 		PathPoint* newPoint = ent->AddComponent<PathPoint>();
 
 		vec3 dir;
-		if (point->IsEndPoint()) // Link as end point
+		if (point->IsEnd()) // Link as end point
 		{
 			dir = normalize(hit.point - point->transform->position);
 

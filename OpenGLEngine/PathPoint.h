@@ -29,6 +29,7 @@ public:
 	Transform* startHandle;
 	Transform* endHandle;
 	Model* sourceModel;
+	Model pathModel;
 	std::vector<CrossSection> crossSections;
 
 	void Start();
@@ -38,13 +39,12 @@ public:
 	void Init(Model& sourceModel, std::vector<CrossSection>& crossSections, glm::vec3 pos, glm::vec3 dir);
 	void DeformPath();
 	void UpdateHandles(glm::vec3 moveDelta);
-	bool IsStartPoint();
-	bool IsEndPoint();
-	bool IsIntermediatePoint();
+	bool IsStart();
+	bool IsEnd();
+	bool IsIntermediate();
 	glm::vec3 GetDirection();
 
 private:
-	Model pathModel;
 	Model* pointModel;
 
 	int GetNumSegments(BezierCurve& curve);

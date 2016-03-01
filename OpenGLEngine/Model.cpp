@@ -1,6 +1,8 @@
 #include "Model.h"
 
-Model::Model(std::string path)
+using namespace std;
+
+Model::Model(string path)
 {
 	LoadModel(path);
 }
@@ -19,14 +21,14 @@ void Model::Draw()
 		meshes[i]->Draw();
 }
 
-void Model::LoadModel(std::string path)
+void Model::LoadModel(string path)
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate);
+	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
 
 	if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
-		std::cout << "Assimp Error: " << importer.GetErrorString() << std::endl;
+		cout << "Assimp Error: " << importer.GetErrorString() << endl;
 		return;
 	}
 
@@ -60,12 +62,13 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene)
 
 Mesh* Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec3> normals;
-	std::vector<glm::vec2> uvs;
-	std::vector<GLuint> indices;
+	vector<glm::vec3> vertices;
+	vector<glm::vec3> normals;
+	vector<glm::vec2> uvs;
+	vector<GLuint> indices;
 
 	// Process vertex info
+	cout << "Num Vertices: " << mesh->mNumVertices << endl;
 	for (int i = 0; i < mesh->mNumVertices; i++)
 	{
 		// Vertex

@@ -120,9 +120,10 @@ void PathPoint::DeformPath()
 	vec3 point;
 	mat4 rotation;
 
+	// Deform the mesh using the bezier curve info
 	for (int segment = 0; segment < numSegments; segment++)
 	{
-		// Calculate index information
+		// Generate indices for each path segment
 		for (int i = 0; i < sourceIndices.size(); i++)
 		{
 			int currentIndex = i + (segment * sourceIndices.size());
@@ -136,6 +137,7 @@ void PathPoint::DeformPath()
 
 			if (segment == 0 || i != 0) // Don't recalc the point or rotation for the first cross section of a new segment since it uses the same values as the previous cross section
 			{
+				// Get position and rotation on the bezier curve for this cross section
 				point = curve.GetPoint(percentLength);
 
 				vec3 tang = curve.GetTangent(percentLength);
@@ -154,7 +156,7 @@ void PathPoint::DeformPath()
 			vector<int>& indices = crossSections[i].indices;
 			for (int j = 0; j < indices.size(); j++)
 			{
-				// Get new index
+				// Generate index from cross section
 				int index = indices[j];
 				int currentIndex = index + (segment * sourceVerts.size());
 
@@ -187,17 +189,17 @@ void PathPoint::UpdateHandles(glm::vec3 moveDelta)
 	endHandle->position += moveDelta;
 }
 
-bool PathPoint::IsStartPoint()
+bool PathPoint::IsStart()
 {
 	return (!prev);
 }
 
-bool PathPoint::IsEndPoint()
+bool PathPoint::IsEnd()
 {
 	return (!next);
 }
 
-bool PathPoint::IsIntermediatePoint()
+bool PathPoint::IsIntermediate()
 {
 	return (next && prev);
 }
