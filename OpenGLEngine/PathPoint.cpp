@@ -156,7 +156,8 @@ void PathPoint::DeformPath()
 				vec3 tang = curve.GetTangent(tValue);
 				quat startRot = angleAxis(angle, GetDirection());
 				quat endRot = angleAxis(next->angle, next->GetDirection());
-				quat sRot = slerp(startRot, endRot, tValue);
+				float t = (InputManager::GetKey(GLFW_KEY_S) ? MathUtil::Smoothstep(0.0f, 1.0f, tValue) : tValue);
+				quat sRot = slerp(startRot, endRot, t);
 				vec3 up = QuaternionUtil::GetUp(sRot);
 				vec3 biNormal = cross(up, tang);
 				vec3 norm = cross(tang, biNormal);

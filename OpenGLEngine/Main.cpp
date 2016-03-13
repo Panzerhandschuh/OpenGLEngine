@@ -171,6 +171,7 @@ int main()
 		shader.SetUniform("ambient", 0.1f, 0.1f, 0.1f);
 		shader.SetUniform("lightColor", 1.0f, 1.0f, 1.0f);
 		shader.SetUniform("lightDir", 1.0f, 1.0f, 1.0f);
+		shader.SetUniform("viewPos", Camera::main.position);
 		EntityManager::DrawAll(shader);
 		//bMesh1.Draw();
 		//bMesh2.Draw();

@@ -39,7 +39,7 @@ void SelectionManager::Update(GLfloat deltaTime)
 	{
 		if (InputManager::GetMouseButton(GLFW_MOUSE_BUTTON_LEFT))
 		{
-			if (InputManager::GetKey(GLFW_KEY_LEFT_CONTROL))
+			if (InputManager::GetKey(GLFW_KEY_LEFT_SHIFT))
 				RotateSelection();
 			else
 				MoveSelection();
