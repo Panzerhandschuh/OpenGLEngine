@@ -68,7 +68,7 @@ Mesh* Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 	vector<GLuint> indices;
 
 	// Process vertex info
-	cout << "Num Vertices: " << mesh->mNumVertices << endl;
+	//cout << "Num Vertices: " << mesh->mNumVertices << endl;
 	for (int i = 0; i < mesh->mNumVertices; i++)
 	{
 		// Vertex

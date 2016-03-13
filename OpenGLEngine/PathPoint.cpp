@@ -105,7 +105,8 @@ void PathPoint::DeformPath()
 	//cout << "Z-Axis Length: " << length << endl;
 	//cout << "Z-Axis Offset: " << offset << endl;
 
-	int numSegments = GetNumSegments(curve);
+	float curveLength = curve.GetLength();
+	int numSegments = GetNumSegments(curveLength);
 	//cout << "Num Segments: " << numSegments << endl;
 
 	vector<vec3>& sourceVerts = sourceMesh->vertices;
@@ -120,6 +121,14 @@ void PathPoint::DeformPath()
 	vec3 point;
 	mat4 rotation;
 
+	//for (int i = 0; i < curve.arcLengths.size(); i++)
+	//{
+	//	float t = (float)i / (float)(curve.arcLengths.size() - 1);
+	//	float tFixed = curve.GetLengthParameter(t);
+	//	vec3 pos = curve.GetPoint(tFixed);
+	//	LineUtil::DrawRay(pos, vec3(0.0f, 2.5f, 0.0f));
+	//}
+
 	// Deform the mesh using the bezier curve info
 	for (int segment = 0; segment < numSegments; segment++)
 	{
@@ -132,18 +141,22 @@ void PathPoint::DeformPath()
 
 		for (int i = 0; i < crossSections.size(); i++)
 		{
-			float tValue = crossSections[i].tValue;
-			float percentLength = ((tValue + segment) / numSegments);
+			float tCrossSection = crossSections[i].tValue;
+			float tNormalized = ((tCrossSection + segment) / numSegments);
+			float tLength = curve.GetLengthParameter(tNormalized);
+			float tValue = (InputManager::GetKey(GLFW_KEY_N)) ? tNormalized : tLength;
+			//cout << "tNormalized:\t\t" << tNormalized << endl;
+			//cout << "tLength:\t\t" << tLength << endl;
 
 			if (segment == 0 || i != 0) // Don't recalc the point or rotation for the first cross section of a new segment since it uses the same values as the previous cross section
 			{
 				// Get position and rotation on the bezier curve for this cross section
-				point = curve.GetPoint(percentLength);
+				point = curve.GetPoint(tValue);
 
-				vec3 tang = curve.GetTangent(percentLength);
+				vec3 tang = curve.GetTangent(tValue);
 				quat startRot = angleAxis(angle, GetDirection());
 				quat endRot = angleAxis(next->angle, next->GetDirection());
-				quat sRot = slerp(startRot, endRot, percentLength);
+				quat sRot = slerp(startRot, endRot, tValue);
 				vec3 up = QuaternionUtil::GetUp(sRot);
 				vec3 biNormal = cross(up, tang);
 				vec3 norm = cross(tang, biNormal);
@@ -209,13 +222,12 @@ vec3 PathPoint::GetDirection()
 	return normalize(endHandle->position - startHandle->position);
 }
 
-int PathPoint::GetNumSegments(BezierCurve& curve)
+int PathPoint::GetNumSegments(float curveLength)
 {
 	Mesh* sourceMesh = sourceModel->meshes[0];
 	Bounds bounds(*sourceMesh);
 
 	float meshLength = bounds.size[DEFORM_AXIS];
-	float curveLength = curve.GetLength();
 	int numSegments = glm::max(1, (int)((curveLength / meshLength) + 0.5f));
 	if (numSegments * sourceMesh->vertices.size() > MAX_PATH_VERTS)
 		numSegments = MAX_PATH_VERTS / sourceMesh->vertices.size();

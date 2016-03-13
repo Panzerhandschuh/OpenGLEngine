@@ -123,6 +123,7 @@ int main()
 		GLfloat currentFrame = (GLfloat)glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
+		//cout << 1.0f / deltaTime << endl;
 
 		// Update keyboard/mouse input
 		InputManager::Update();

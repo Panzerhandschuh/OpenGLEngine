@@ -47,7 +47,7 @@ public:
 private:
 	Model* pointModel;
 
-	int GetNumSegments(BezierCurve& curve);
+	int GetNumSegments(float curveLength);
 };
 
 #endif
