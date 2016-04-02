@@ -1,11 +1,11 @@
 #include "LineUtil.h"
 
-void LineUtil::DrawRay(vec3 pos, vec3 dir)
+void LineUtil::DrawRay(vec3 pos, vec3 dir, vec3 color)
 {
-	DrawLine(pos, pos + dir);
+	DrawLine(pos, pos + dir, color);
 }
 
-void LineUtil::DrawLine(vec3 v1, vec3 v2)
+void LineUtil::DrawLine(vec3 v1, vec3 v2, vec3 color)
 {
 	vec3 verts[2];
 	verts[0] = v1;
@@ -32,7 +32,7 @@ void LineUtil::DrawLine(vec3 v1, vec3 v2)
 	shader.Use();
 	shader.SetUniform("view", Camera::main.view);
 	shader.SetUniform("projection", Camera::main.proj);
-	shader.SetUniform("lineColor", 1.0f, 1.0f, 1.0f);
+	shader.SetUniform("lineColor", color);
 	glDrawArrays(GL_LINES, 0, 2); // Draw using vertices
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind vbo

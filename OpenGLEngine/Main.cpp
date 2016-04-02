@@ -9,16 +9,18 @@
 #include "Engine.h"
 #include "EntityManager.h"
 #include "Transform.h"
-#include "PathPoint.h"
 #include "Camera.h"
 #include "Model.h"
 #include "Shader.h"
 #include "BezierMesh.h"
 #include "BezierPath.h"
-#include "PathPoint.h"
+#include "PathPointMesh.h"
+#include "PathPointShapes.h"
 #include "LineUtil.h"
 #include "CrossSection.h"
 #include "MeshExporter.h"
+#include "ShapeUtil.h"
+#include "LineUtil.h"
 
 using namespace glm;
 using namespace std;
@@ -76,10 +78,6 @@ int main()
 	//BezierCurve curve4(glm::vec3(0.0f, 0.0f, -12.0f), glm::vec3(-12.0f, 0.0f, -12.0f), glm::vec3(-12.0f, 0.0f, 0), glm::vec3(0.0f, 0.0f, 0.0f));
 	//BezierMesh bMesh4(curve4);
 
-	// Create model
-	Model track("CoasterTrack.FBX");
-	vector<CrossSection> crossSections = CrossSection::GetCrossSections(*track.meshes[0]);
-
 	// Create bezier path
 	//BezierPath point1(track, curve1);
 	//point1.DeformPath();
@@ -93,13 +91,26 @@ int main()
 	Entity* managers = EntityManager::CreateEntity();
 	managers->AddComponent<SelectionManager>();
 
+	// Create model
+	Model track("CoasterTrack.FBX");
+	vector<CrossSection> crossSections = CrossSection::GetCrossSections(*track.meshes[0]);
+
+	// Create shapes
+	Shape shape = ShapeUtil::CreateCircle(1.0f, 32);
+	PathShape pathShape(shape, vec2(0.0f, 0.0f));
+	vector<PathShape> shapes = { pathShape };
+
 	Entity* ent1 = EntityManager::CreateEntity();
-	PathPoint* point1 = ent1->AddComponent<PathPoint>();
-	point1->Init(track, crossSections, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	//PathPointMesh* point1 = ent1->AddComponent<PathPointMesh>();
+	//point1->Init(track, crossSections, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	PathPointShapes* point1 = ent1->AddComponent<PathPointShapes>();
+	point1->Init(shapes, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	
 	Entity* ent2 = EntityManager::CreateEntity();
-	PathPoint* point2 = ent2->AddComponent<PathPoint>();
-	point2->Init(track, crossSections, glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	//PathPointMesh* point2 = ent2->AddComponent<PathPointMesh>();
+	//point2->Init(track, crossSections, glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	PathPointShapes* point2 = ent2->AddComponent<PathPointShapes>();
+	point2->Init(shapes, glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
 	point1->next = point2;
 	point2->prev = point1;
@@ -109,7 +120,7 @@ int main()
 	//point->AddComponent<Transform>();
 	//Model* model = point->AddComponent<Model>();
 	//model->LoadModel("Sphere.FBX");
-	//point->AddComponent<PathPoint>();
+	//point->AddComponent<PathPointMesh>();
 
 	// Draw in wireframe
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -161,6 +172,7 @@ int main()
 		glm::mat4 model;
 		//model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 		//model = glm::rotate(model, glm::quarter_pi<GLfloat>(), glm::vec3(0.5f, 1.0f, 0.0f));
+		point1->DeformPath();
 
 		// Draw objects
 		shader.Use();

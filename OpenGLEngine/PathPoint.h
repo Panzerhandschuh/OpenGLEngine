@@ -15,10 +15,6 @@
 #include "PathPointHandle.h"
 #include "QuaternionUtil.h"
 #include "LineUtil.h"
-#include "CrossSection.h"
-
-#define DEFORM_AXIS 2
-#define MAX_PATH_VERTS 65535
 
 class PathPoint : public Component
 {
@@ -28,16 +24,14 @@ public:
 	float angle = 0.0f;
 	Transform* startHandle;
 	Transform* endHandle;
-	Model* sourceModel;
 	Model pathModel;
-	std::vector<CrossSection> crossSections;
 
-	void Start();
+	virtual void Start();
 	~PathPoint();
 	void Update(GLfloat deltaTime);
-	void Draw(Shader& shader);
-	void Init(Model& sourceModel, std::vector<CrossSection>& crossSections, glm::vec3 pos, glm::vec3 dir);
-	void DeformPath();
+	virtual void Draw(Shader& shader);
+	void Init(glm::vec3 pos, glm::vec3 dir);
+	virtual void DeformPath() = 0;
 	void UpdateHandles(glm::vec3 moveDelta);
 	bool IsStart();
 	bool IsEnd();
@@ -46,8 +40,6 @@ public:
 
 private:
 	Model* pointModel;
-
-	int GetNumSegments(float curveLength);
 };
 
 #endif

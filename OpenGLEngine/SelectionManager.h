@@ -7,7 +7,6 @@
 #include "Physics.h"
 #include "Transform.h"
 #include "SphereCollider.h"
-#include "PathPoint.h"
 
 class SelectionManager : public Component
 {

@@ -1,5 +1,8 @@
 #include "SelectionManager.h"
 
+#include "PathPointMesh.h"
+#include "PathPointShapes.h"
+
 using namespace std;
 using namespace glm;
 
@@ -125,6 +128,10 @@ void SelectionManager::CreatePathPoint()
 	if (!point || point->IsIntermediate())
 		return;
 
+	PathPointMesh* pointMesh = selectedEnt->GetComponent<PathPointMesh>();
+	PathPointShapes* pointShapes = selectedEnt->GetComponent<PathPointShapes>();
+	bool isPointMesh = (pointMesh) ? true : false;
+
 	vec3 rayPos = Camera::main.position;
 	vec3 rayDir = Physics::GetRayFromMouse();
 	vec3 planePos = selectedEnt->transform->position;
@@ -133,7 +140,11 @@ void SelectionManager::CreatePathPoint()
 	if (Physics::RaycastPlane(rayPos, rayDir, planePos, planeNorm, hit))
 	{
 		Entity* ent = EntityManager::CreateEntity();
-		PathPoint* newPoint = ent->AddComponent<PathPoint>();
+		PathPoint* newPoint;
+		if (isPointMesh)
+			newPoint = ent->AddComponent<PathPointMesh>();
+		else
+			newPoint = ent->AddComponent<PathPointShapes>();
 
 		vec3 dir;
 		if (point->IsEnd()) // Link as end point
@@ -150,7 +161,11 @@ void SelectionManager::CreatePathPoint()
 			point->prev = newPoint;
 			newPoint->next = point;
 		}
-		newPoint->Init(*point->sourceModel, point->crossSections, hit.point, dir);
+
+		if (isPointMesh)
+			((PathPointMesh*)newPoint)->Init(*pointMesh->sourceModel, pointMesh->crossSections, hit.point, dir);
+		else
+			((PathPointShapes*)newPoint)->Init(pointShapes->shapes, hit.point, dir);
 		newPoint->DeformPath();
 
 		selectedEnt = newPoint->entity;
