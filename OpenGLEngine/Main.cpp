@@ -92,8 +92,11 @@ int main()
 	managers->AddComponent<SelectionManager>();
 
 	// Create model
-	Model track("CoasterTrack.FBX");
-	vector<CrossSection> crossSections = CrossSection::GetCrossSections(*track.meshes[0]);
+	//Model track("CoasterTrack.FBX");
+	//vector<CrossSection> crossSectionsMid = CrossSection::GetCrossSections(*track.meshes[0]);
+	Model trackMin("CoasterTrackMin.FBX");
+	Model trackMid("CoasterTrackMid.FBX");
+	Model trackMax("CoasterTrackMax.FBX");
 
 	// Create shapes
 	Shape shape = ShapeUtil::CreateCircle(1.0f, 32);
@@ -101,16 +104,16 @@ int main()
 	vector<PathShape> shapes = { pathShape };
 
 	Entity* ent1 = EntityManager::CreateEntity();
-	//PathPointMesh* point1 = ent1->AddComponent<PathPointMesh>();
-	//point1->Init(track, crossSections, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	PathPointShapes* point1 = ent1->AddComponent<PathPointShapes>();
-	point1->Init(shapes, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	PathPointMesh* point1 = ent1->AddComponent<PathPointMesh>();
+	point1->Init(trackMin, trackMid, trackMax, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	//PathPointShapes* point1 = ent1->AddComponent<PathPointShapes>();
+	//point1->Init(shapes, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	
 	Entity* ent2 = EntityManager::CreateEntity();
-	//PathPointMesh* point2 = ent2->AddComponent<PathPointMesh>();
-	//point2->Init(track, crossSections, glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	PathPointShapes* point2 = ent2->AddComponent<PathPointShapes>();
-	point2->Init(shapes, glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	PathPointMesh* point2 = ent2->AddComponent<PathPointMesh>();
+	point2->Init(trackMin, trackMid, trackMax, glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	//PathPointShapes* point2 = ent2->AddComponent<PathPointShapes>();
+	//point2->Init(shapes, glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
 	point1->next = point2;
 	point2->prev = point1;
@@ -172,7 +175,7 @@ int main()
 		glm::mat4 model;
 		//model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 		//model = glm::rotate(model, glm::quarter_pi<GLfloat>(), glm::vec3(0.5f, 1.0f, 0.0f));
-		point1->DeformPath();
+		//point1->DeformPath();
 
 		// Draw objects
 		shader.Use();

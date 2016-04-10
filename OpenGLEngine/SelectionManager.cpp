@@ -68,9 +68,9 @@ void SelectionManager::RotateSelection()
 	{
 		float rotateAmount = 0.01f * InputManager::mouseDelta.x;
 		point->angle = fmodf((point->angle + rotateAmount), two_pi<float>()); // Keep angle within 360 degrees
-		//selectedEnt->transform->rotation = rotate(selectedEnt->transform->rotation, rotateAmount, selectedEnt->transform->GetRight());
+		//selectedEnt->transform->rotation *= angleAxis(rotateAmount, vec3(0.0f, 0.0f, 1.0f));
 
-		point->DeformPath();
+		DeformPoint(point);
 
 		// Draw the new up vector
 		quat rot = angleAxis(point->angle, point->GetDirection());
@@ -112,12 +112,30 @@ void SelectionManager::MoveSelection()
 			{
 				PathPointHandle* handle = selectedHandle->GetComponent<PathPointHandle>();
 				if (handle)
+				{
 					handle->UpdatePosition(moveDelta);
+
+					vec3 dir = -point->GetDirection();
+					if (useHeightPlane)
+					{
+						vec3 up = normalize(cross(dir, transform->GetForward()));
+						mat4 rot = lookAt(vec3(), dir, up);
+						point->transform->rotation = quat(transpose(rot));
+					}
+					else
+					{
+						//quat rot = QuaternionUtil::LookRotation(dir, point->transform->GetUp()/*vec3(0.0f, 1.0f, 0.0f)*/);
+						//point->transform->rotation = rot;
+						//mat4 rot = orientation(dir, point->transform->GetUp());
+						mat4 rot = lookAt(vec3(), dir, point->transform->GetUp());
+						point->transform->rotation = quat(transpose(rot));
+					}
+				}
 			}
 			else
 				point->UpdateHandles(moveDelta);
 
-			point->DeformPath();
+			DeformPoint(point);
 		}
 	}
 }
@@ -163,11 +181,19 @@ void SelectionManager::CreatePathPoint()
 		}
 
 		if (isPointMesh)
-			((PathPointMesh*)newPoint)->Init(*pointMesh->sourceModel, pointMesh->crossSections, hit.point, dir);
+			((PathPointMesh*)newPoint)->Init(*pointMesh->lodMin, *pointMesh->lodMid, *pointMesh->lodMax, hit.point, dir);
 		else
 			((PathPointShapes*)newPoint)->Init(pointShapes->shapes, hit.point, dir);
-		newPoint->DeformPath();
+		DeformPoint(newPoint);
 
 		selectedEnt = newPoint->entity;
 	}
+}
+
+void SelectionManager::DeformPoint(PathPoint* point)
+{
+	if (point->prev)
+		point->prev->DeformPath();
+	if (point->next)
+		point->DeformPath();
 }

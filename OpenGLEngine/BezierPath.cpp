@@ -101,7 +101,7 @@ void BezierPath::DeformPath()
 			vec3 bPos = curve.GetPoint(percentLength);
 
 			// Rotation
-			vec3 tang = curve.GetTangent(percentLength);
+			vec3 tang = normalize(curve.Derivative(percentLength));
 			vec3 up(0.0f, 1.0f, 0.0f);
 			vec3 biNormal = cross(up, tang);
 			vec3 norm = cross(tang, biNormal);

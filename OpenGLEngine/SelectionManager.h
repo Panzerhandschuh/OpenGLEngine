@@ -8,6 +8,8 @@
 #include "Transform.h"
 #include "SphereCollider.h"
 
+class PathPoint;
+
 class SelectionManager : public Component
 {
 public:
@@ -28,6 +30,7 @@ private:
 	void RotateSelection();
 	void MoveSelection();
 	void CreatePathPoint();
+	void DeformPoint(PathPoint* point);
 };
 
 #endif

@@ -16,7 +16,10 @@ public:
 	BezierCurve(glm::vec3 p0, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3);
 	void SetControlPoints(glm::vec3 p0, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3);
 	glm::vec3 GetPoint(float t);
-	glm::vec3 GetTangent(float t);
+	glm::vec3 Derivative(float t);
+	glm::vec3 Derivative2(float t);
+	float GetCurvature(float t);
+	float GetMaxCurvature();
 	float GetLength();
 	float GetLengthParameter(float t);
 

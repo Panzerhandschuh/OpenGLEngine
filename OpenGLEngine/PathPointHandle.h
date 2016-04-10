@@ -5,6 +5,7 @@
 #include "Component.h"
 #include "Entity.h"
 #include "SphereCollider.h"
+#include "PathPoint.h"
 
 class PathPointHandle : public Component
 {

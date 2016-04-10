@@ -47,26 +47,20 @@ void PathPointShapes::DeformPath()
 	vector<vec3> normals(numVerts);
 	vector<GLuint> indices(numIndices);
 
-	quat startRot = angleAxis(angle, GetDirection());
-	quat endRot = angleAxis(next->angle, next->GetDirection());
+	//quat startRot = angleAxis(angle, GetDirection());
+	//quat endRot = angleAxis(next->angle, next->GetDirection());
+	quat startRot = transform->rotation;
+	quat endRot = next->transform->rotation;
 
 	//cout << startRot.x << " " << startRot.y << " " << startRot.z << " " << startRot.w << endl;
 	//cout << endRot.x << " " << endRot.y << " " << endRot.z << " " << endRot.w << endl;
-
-	LineUtil::DrawRay(curve.GetPoint(0.0f), QuaternionUtil::GetUp(startRot) * 5.0f, vec3(0.0f, 1.0f, 0.0f));
-	LineUtil::DrawRay(curve.GetPoint(0.0f), QuaternionUtil::GetRight(startRot) * 5.0f, vec3(1.0f, 0.0f, 0.0f));
-	LineUtil::DrawRay(curve.GetPoint(0.0f), QuaternionUtil::GetForward(startRot) * 5.0f, vec3(0.0f, 0.0f, 1.0f));
-	
-	LineUtil::DrawRay(curve.GetPoint(1.0f), QuaternionUtil::GetUp(endRot) * 5.0f, vec3(0.0f, 1.0f, 0.0f));
-	LineUtil::DrawRay(curve.GetPoint(1.0f), QuaternionUtil::GetRight(endRot) * 5.0f, vec3(1.0f, 0.0f, 0.0f));
-	LineUtil::DrawRay(curve.GetPoint(1.0f), QuaternionUtil::GetForward(endRot) * 5.0f, vec3(0.0f, 0.0f, 1.0f));
 
 	for (int i = 0; i < pathLoops; i++)
 	{
 		// Get point and rotation on curve
 		float t = (float)i / (float)(pathLoops - 1);
 		vec3 point = curve.GetPoint(t);
-		vec3 tang = curve.GetTangent(t);
+		vec3 tang = normalize(curve.Derivative(t));
 		quat sRot = slerp(startRot, endRot, smoothstep(0.0f, 1.0f, t));
 
 		vec3 up = QuaternionUtil::GetUp(sRot);

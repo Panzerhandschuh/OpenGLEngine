@@ -27,15 +27,39 @@ vec3 BezierCurve::GetPoint(float t)
 	return (tt3 * p0) + (3.0f * t * tt2 * p1) + (3.0f * tt1 * t2 * p2) + (t3 * p3);
 }
 
-vec3 BezierCurve::GetTangent(float t)
+vec3 BezierCurve::Derivative(float t)
 {
 	float t2 = t * t;
 	float tt1 = 1.0f - t;
 	float tt2 = tt1 * tt1;
-	vec3 tangent = (-3.0f * tt2 * p0) + ((3.0f * tt2 - 6.0f * t * tt1) * p1) + ((6.0f * t * tt1 - 3.0f * t2) * p2) + (3.0f * t2 * p3);
-	return normalize(tangent);
+	return (-3.0f * tt2 * p0) + ((3.0f * tt2 - 6.0f * t * tt1) * p1) + ((6.0f * t * tt1 - 3.0f * t2) * p2) + (3.0f * t2 * p3);
 }
 
+glm::vec3 BezierCurve::Derivative2(float t)
+{
+	return 6.0f * (1.0f - t) * (p2 - 2.0f * p1 + p0) + 6.0f * t * (p3 - 2.0f * p2 + p1);
+}
+
+float BezierCurve::GetCurvature(float t)
+{
+	vec3 deriv = Derivative(t);
+	vec3 deriv2 = Derivative2(t);
+	return length(cross(deriv, deriv2)) / powf(length(deriv), 3.0f);
+}
+
+float BezierCurve::GetMaxCurvature()
+{
+	float max = numeric_limits<float>::min();
+	for (int i = 0; i < NUM_STEPS; i++)
+	{
+		float t = (float)i / (float)(NUM_STEPS - 1);
+		float curvature = GetCurvature(t);
+		if (curvature > max)
+			max = curvature;
+	}
+
+	return max;
+}
 
 float BezierCurve::GetLength()
 {

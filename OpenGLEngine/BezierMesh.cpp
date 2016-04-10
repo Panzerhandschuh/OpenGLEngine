@@ -13,7 +13,7 @@ BezierMesh::BezierMesh(BezierCurve& curve)
 	{
 		float t = (float)i / (float)numSegments;
 		glm::vec3 point = curve.GetPoint(t);
-		glm::vec3 tang = glm::normalize(curve.GetTangent(t));
+		glm::vec3 tang = normalize(curve.Derivative(t));
 		glm::vec3 norm(0.0f, 1.0f, 0.0f);
 		glm::vec3 biNorm = glm::cross(tang, norm);
 		//std::cout << biNorm.x << ", " << biNorm.y << ", " << biNorm.z << std::endl;

@@ -73,6 +73,7 @@ void PathPoint::Draw(Shader & shader)
 void PathPoint::Init(glm::vec3 pos, glm::vec3 dir)
 {
 	transform->position = pos;
+	transform->rotation = normalize(quat(orientation(dir, vec3(0.0f, 0.0f, 1.0f))));
 	startHandle->position = transform->position + (-5.0f * dir);
 	endHandle->position = transform->position + (5.0f * dir);
 }
