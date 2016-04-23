@@ -11,6 +11,7 @@
 #include "Transform.h"
 #include "Camera.h"
 #include "Model.h"
+#include "ModelRenderer.h"
 #include "Shader.h"
 #include "BezierMesh.h"
 #include "BezierPath.h"
@@ -21,6 +22,7 @@
 #include "MeshExporter.h"
 #include "ShapeUtil.h"
 #include "LineUtil.h"
+#include "PathFollower.h"
 
 using namespace glm;
 using namespace std;
@@ -66,7 +68,10 @@ int main()
 	glClearColor(0.172549f, 0.235294117647f, 0.262745098f, 1.0f);
 
 	// Initialize camera
-	Camera::main.position = glm::vec3(0.0f, 2.0f, 3.0f);
+	Entity* cameraEnt = EntityManager::CreateEntity();
+	cameraEnt->transform->position = glm::vec3(0.0f, 2.0f, 3.0f);
+	Camera* camera = cameraEnt->AddComponent<Camera>();
+	Camera::main = camera;
 
 	// Create bezier meshes
 	//BezierCurve curve1(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(8.0f, 0.0f, 0.0f), glm::vec3(8.0f, 4.0f, -8.0f), glm::vec3(16.0f, 4.0f, -8.0f));
@@ -99,31 +104,25 @@ int main()
 	Model trackMax("CoasterTrackMax.FBX");
 
 	// Create shapes
-	Shape shape = ShapeUtil::CreateCircle(1.0f, 32);
-	PathShape pathShape(shape, vec2(0.0f, 0.0f));
-	vector<PathShape> shapes = { pathShape };
+	//Shape shape = ShapeUtil::CreateCircle(1.0f, 32);
+	//PathShape pathShape(shape, vec2(0.0f, 0.0f));
+	//vector<PathShape> shapes = { pathShape };
 
-	Entity* ent1 = EntityManager::CreateEntity();
-	PathPointMesh* point1 = ent1->AddComponent<PathPointMesh>();
+	Entity* pointEnt1 = EntityManager::CreateEntity();
+	PathPointMesh* point1 = pointEnt1->AddComponent<PathPointMesh>();
 	point1->Init(trackMin, trackMid, trackMax, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	//PathPointShapes* point1 = ent1->AddComponent<PathPointShapes>();
+	//PathPointShapes* point1 = pointEnt1->AddComponent<PathPointShapes>();
 	//point1->Init(shapes, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	
-	Entity* ent2 = EntityManager::CreateEntity();
-	PathPointMesh* point2 = ent2->AddComponent<PathPointMesh>();
+	Entity* pointEnt2 = EntityManager::CreateEntity();
+	PathPointMesh* point2 = pointEnt2->AddComponent<PathPointMesh>();
 	point2->Init(trackMin, trackMid, trackMax, glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	//PathPointShapes* point2 = ent2->AddComponent<PathPointShapes>();
+	//PathPointShapes* point2 = pointEnt2->AddComponent<PathPointShapes>();
 	//point2->Init(shapes, glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
 	point1->next = point2;
 	point2->prev = point1;
 	point1->DeformPath();
-
-	//Entity* point = EntityManager::CreateEntity();
-	//point->AddComponent<Transform>();
-	//Model* model = point->AddComponent<Model>();
-	//model->LoadModel("Sphere.FBX");
-	//point->AddComponent<PathPointMesh>();
 
 	// Draw in wireframe
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -159,13 +158,38 @@ int main()
 		}
 
 		// Update camera
-		Camera::main.Update(deltaTime);
+		//Camera::main.Update(deltaTime);
 
 		// Render settings
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Update objects
 		EntityManager::UpdateAll(deltaTime);
+
+		// TEMPORARY: Hotkey functions (this code should be moved into a separate manager script)
+		if (InputManager::GetKeyDown(GLFW_KEY_P))
+		{
+			//Camera::main->entity->enabled = false;
+			PathFollower* follower = Camera::main->entity->AddComponent<PathFollower>();
+			follower->Init(point1, vec3(0.0f, 3.0f, 0.0f));
+			follower->StartFollow();
+		}
+		else if (InputManager::GetKeyDown(GLFW_KEY_S))
+		{
+			//Camera::main->entity->enabled = true;
+			if (Camera::main->entity->GetComponent<PathFollower>())
+				Camera::main->entity->RemoveComponent<PathFollower>();
+		}
+		else if (InputManager::GetKeyDown(GLFW_KEY_F))
+		{
+			Entity* followerEnt = EntityManager::CreateEntity();
+			followerEnt->transform->scale = vec3(3.0f, 3.0f, 3.0f);
+			ModelRenderer* followerRenderer = followerEnt->AddComponent<ModelRenderer>();
+			followerRenderer->Init("Sphere.FBX");
+			PathFollower* follower = followerEnt->AddComponent<PathFollower>();
+			follower->Init(point1, vec3(0.0f, 1.0f, 0.0f));
+			follower->StartFollow();
+		}
 		//point1.Update(deltaTime);
 		//point2.Update(deltaTime);
 		//path3.Update(deltaTime);
@@ -180,13 +204,13 @@ int main()
 		// Draw objects
 		shader.Use();
 		shader.SetUniform("model", model);
-		shader.SetUniform("view", Camera::main.view);
-		shader.SetUniform("projection", Camera::main.proj);
+		shader.SetUniform("view", Camera::main->GetView());
+		shader.SetUniform("projection", Camera::main->proj);
 		shader.SetUniform("objectColor", 1.0f, 1.0f, 1.0f);
 		shader.SetUniform("ambient", 0.1f, 0.1f, 0.1f);
 		shader.SetUniform("lightColor", 1.0f, 1.0f, 1.0f);
 		shader.SetUniform("lightDir", 1.0f, 1.0f, 1.0f);
-		shader.SetUniform("viewPos", Camera::main.position);
+		shader.SetUniform("viewPos", Camera::main->transform->position);
 		EntityManager::DrawAll(shader);
 		//bMesh1.Draw();
 		//bMesh2.Draw();

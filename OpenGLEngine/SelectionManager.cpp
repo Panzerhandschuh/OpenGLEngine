@@ -18,7 +18,7 @@ void SelectionManager::Update(GLfloat deltaTime)
 	if (InputManager::GetMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT))
 	{
 		RaycastHit hit;
-		vec3 rayPos = Camera::main.position;
+		vec3 rayPos = Camera::main->transform->position;
 		vec3 rayDir = Physics::GetRayFromMouse();
 		if (selectedEnt && Physics::RaycastScene(rayPos, rayDir, hit, 1))
 		{
@@ -82,9 +82,9 @@ void SelectionManager::RotateSelection()
 
 void SelectionManager::MoveSelection()
 {
-	vec3 rayPos = Camera::main.position;
+	vec3 rayPos = Camera::main->transform->position;
 	vec3 rayDir = Physics::GetRayFromMouse();
-	vec3 planeNorm = (useHeightPlane) ? Camera::main.GetForward() : vec3(0.0f, 1.0f, 0.0f);
+	vec3 planeNorm = (useHeightPlane) ? Camera::main->GetForward() : vec3(0.0f, 1.0f, 0.0f);
 	RaycastHit hit;
 	if (Physics::RaycastPlane(rayPos, rayDir, planePos, planeNorm, hit))
 	{
@@ -150,7 +150,7 @@ void SelectionManager::CreatePathPoint()
 	PathPointShapes* pointShapes = selectedEnt->GetComponent<PathPointShapes>();
 	bool isPointMesh = (pointMesh) ? true : false;
 
-	vec3 rayPos = Camera::main.position;
+	vec3 rayPos = Camera::main->transform->position;
 	vec3 rayDir = Physics::GetRayFromMouse();
 	vec3 planePos = selectedEnt->transform->position;
 	vec3 planeNorm = vec3(0.0f, 1.0f, 0.0f);

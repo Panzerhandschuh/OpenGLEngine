@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Model::Model(string path)
+Model::Model(const string& path)
 {
 	LoadModel(path);
 }
@@ -21,7 +21,7 @@ void Model::Draw()
 		meshes[i]->Draw();
 }
 
-void Model::LoadModel(string path)
+void Model::LoadModel(const string& path)
 {
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);

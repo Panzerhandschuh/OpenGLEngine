@@ -1,10 +1,12 @@
 #include "Camera.h"
 
-Camera Camera::main;
+using namespace glm;
 
-Camera::Camera()
+Camera* Camera::main;
+
+void Camera::Start()
 {
-	proj = glm::perspective(glm::quarter_pi<GLfloat>(),
+	proj = perspective(quarter_pi<GLfloat>(),
 		(GLfloat)Engine::screenWidth / (GLfloat)Engine::screenHeight, 0.1f, 1000.0f);
 }
 
@@ -13,22 +15,22 @@ void Camera::Update(GLfloat deltaTime)
 	// Move camera
 	GLfloat camSpeed = (InputManager::GetKey(GLFW_KEY_LEFT_SHIFT)) ? fastSpeed : speed;
 	if (InputManager::GetKey(GLFW_KEY_W))
-		position += camSpeed * -GetForward() * deltaTime;
+		transform->position += camSpeed * -GetForward() * deltaTime;
 	if (InputManager::GetKey(GLFW_KEY_S))
-		position += camSpeed * GetForward() * deltaTime;
+		transform->position += camSpeed * GetForward() * deltaTime;
 	if (InputManager::GetKey(GLFW_KEY_A))
-		position += camSpeed * -GetRight() * deltaTime;
+		transform->position += camSpeed * -GetRight() * deltaTime;
 	if (InputManager::GetKey(GLFW_KEY_D))
-		position += camSpeed * GetRight() * deltaTime;
+		transform->position += camSpeed * GetRight() * deltaTime;
 	if (InputManager::GetKey(GLFW_KEY_Q))
-		position += camSpeed * -GetUp() * deltaTime;
+		transform->position += camSpeed * -GetUp() * deltaTime;
 	if (InputManager::GetKey(GLFW_KEY_E))
-		position += camSpeed * GetUp() * deltaTime;
+		transform->position += camSpeed * GetUp() * deltaTime;
 
 	// Mouse look
 	if (InputManager::GetMouseButton(GLFW_MOUSE_BUTTON_RIGHT))
 	{
-		glm::vec2 mouseDelta = InputManager::mouseDelta;
+		vec2 mouseDelta = InputManager::mouseDelta;
 		yaw += mouseDelta.x * sensitivity;
 		pitch += mouseDelta.y * sensitivity;
 	}
@@ -39,37 +41,59 @@ void Camera::Update(GLfloat deltaTime)
 	if (pitch < -89.0f)
 		pitch = -89.0f;
 
-	glm::vec3 front;
-	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	front.y = sin(glm::radians(pitch));
-	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	front = glm::normalize(front);
-	glm::vec3 right = glm::normalize(glm::cross(front, glm::vec3(0.0f, 1.0f, 0.0f)));
-	glm::vec3 up = glm::normalize(glm::cross(right, front));
+	vec3 front;
+	front.x = cos(radians(yaw)) * cos(radians(pitch));
+	front.y = sin(radians(pitch));
+	front.z = sin(radians(yaw)) * cos(radians(pitch));
+	front = normalize(front);
+	vec3 right = normalize(cross(front, vec3(0.0f, 1.0f, 0.0f)));
+	vec3 up = normalize(cross(right, front));
 
 	//view = glm::mat4(right.x, right.y, right.z, 0.0f, 
 	//	up.x, up.y, up.z, 0.0f, 
 	//	front.x, front.y, front.z, 0.0f, 
 	//	0.0f, 0.0f, 0.0f, 1.0f);
-	view = glm::lookAt(position, position + front, up);
+	view = glm::lookAt(transform->position, transform->position + front, up);
+	
+	//transform->rotation = quat(lookAt(transform->position, transform->position + front, up));
+	//transform->rotation = quat_cast(view);
 }
 
-glm::vec3 Camera::GetRight()
+vec3 Camera::GetRight()
 {
-	return glm::vec3(view[0][0], view[1][0], view[2][0]);
+	return vec3(view[0][0], view[1][0], view[2][0]);
 }
 
-glm::vec3 Camera::GetUp()
+vec3 Camera::GetUp()
 {
-	return glm::vec3(view[0][1], view[1][1], view[2][1]);
+	return vec3(view[0][1], view[1][1], view[2][1]);
 }
 
-glm::vec3 Camera::GetForward()
+vec3 Camera::GetForward()
 {
-	return glm::vec3(view[0][2], view[1][2], view[2][2]);
+	return vec3(view[0][2], view[1][2], view[2][2]);
 }
 
-void Camera::LookAt(const glm::vec3& target)
+//void Camera::LookAt(const glm::vec3& target)
+//{
+//	view = lookAt(transform->position, target, glm::vec3(0.0f, 1.0f, 0.0f));
+//}
+
+mat4 Camera::GetView()
 {
-	view = glm::lookAt(position, target, glm::vec3(0.0f, 1.0f, 0.0f));
+	//return lookAt(transform->position, transform->position + transform->GetForward(), transform->GetUp());
+
+	//mat4 view(transform->rotation);
+	//
+	//vec3 xAxis(view[0][0], view[1][0], view[2][0]);
+	//vec3 yAxis(view[0][1], view[1][1], view[2][1]);
+	//vec3 zAxis(view[0][2], view[1][2], view[2][2]);
+	//
+	//view[3][0] = -dot(xAxis, transform->position);
+	//view[3][1] = -dot(yAxis, transform->position);
+	//view[3][2] = -dot(zAxis, transform->position);
+	//
+	//return view;
+
+	return view;
 }

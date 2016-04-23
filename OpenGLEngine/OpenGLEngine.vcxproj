@@ -74,6 +74,7 @@
     <ClCompile Include="Bounds.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CrossSection.cpp" />
+    <ClCompile Include="HotkeyManager.cpp" />
     <ClCompile Include="LineUtil.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -86,6 +87,8 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MeshExporter.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="ModelRenderer.cpp" />
+    <ClCompile Include="PathFollower.cpp" />
     <ClCompile Include="PathPoint.cpp" />
     <ClCompile Include="PathPointMesh.cpp" />
     <ClCompile Include="PathPointHandle.cpp" />
@@ -107,6 +110,8 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="CrossSection.h" />
+    <ClInclude Include="HotkeyManager.h" />
+    <ClInclude Include="PathFollower.h" />
     <ClInclude Include="PathPoint.h" />
     <ClInclude Include="PathPointShapes.h" />
     <ClInclude Include="PathShape.h" />

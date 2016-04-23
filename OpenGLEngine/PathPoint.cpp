@@ -1,5 +1,7 @@
 #include "PathPoint.h"
 
+using namespace glm;
+
 void PathPoint::Start()
 {
 	pointModel = new Model("Sphere.FBX");
@@ -102,4 +104,31 @@ bool PathPoint::IsIntermediate()
 glm::vec3 PathPoint::GetDirection()
 {
 	return normalize(endHandle->position - startHandle->position);
+}
+
+glm::vec3 PathPoint::GetPoint(BezierCurve& curve, float t)
+{
+	return curve.GetPoint(t);
+}
+
+glm::mat4 PathPoint::GetRotation(BezierCurve& curve, float t)
+{
+	vec3 tang = normalize(curve.Derivative(t));
+	quat startRot = angleAxis(angle, GetDirection());
+	quat endRot = angleAxis(next->angle, next->GetDirection());
+	quat sRot = slerp(startRot, endRot, smoothstep(0.0f, 1.0f, t));
+
+	vec3 up = QuaternionUtil::GetUp(sRot);
+	vec3 biNormal = normalize(cross(up, tang));
+	vec3 norm = normalize(cross(tang, biNormal));
+
+	return mat4(biNormal.x, biNormal.y, biNormal.z, 0.0f,
+		norm.x, norm.y, norm.z, 0.0f,
+		tang.x, tang.y, tang.z, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f);
+}
+
+BezierCurve PathPoint::GetCurve()
+{
+	return BezierCurve(transform->position, endHandle->position, next->startHandle->position, next->transform->position);
 }

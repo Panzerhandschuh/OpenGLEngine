@@ -1,5 +1,7 @@
 #include "LineUtil.h"
 
+using namespace glm;
+
 void LineUtil::DrawRay(vec3 pos, vec3 dir, vec3 color)
 {
 	DrawLine(pos, pos + dir, color);
@@ -30,8 +32,8 @@ void LineUtil::DrawLine(vec3 v1, vec3 v2, vec3 color)
 
 	// Draw
 	shader.Use();
-	shader.SetUniform("view", Camera::main.view);
-	shader.SetUniform("projection", Camera::main.proj);
+	shader.SetUniform("view", Camera::main->GetView());
+	shader.SetUniform("projection", Camera::main->proj);
 	shader.SetUniform("lineColor", color);
 	glDrawArrays(GL_LINES, 0, 2); // Draw using vertices
 

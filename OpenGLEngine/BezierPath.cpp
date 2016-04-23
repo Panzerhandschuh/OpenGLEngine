@@ -37,9 +37,9 @@ void BezierPath::Update(GLfloat deltaTime)
 			selectedPoints.clear();
 		else
 		{
-			vec3 rayPos = Camera::main.position;
+			vec3 rayPos = Camera::main->transform->position;
 			vec3 rayDir = Physics::GetRayFromMouse();
-			vec3 planeNorm = (useHeightPlane) ? Camera::main.GetForward() : vec3(0.0f, 1.0f, 0.0f);
+			vec3 planeNorm = (useHeightPlane) ? Camera::main->GetForward() : vec3(0.0f, 1.0f, 0.0f);
 			RaycastHit hit;
 			if (Physics::RaycastPlane(rayPos, rayDir, planePos, planeNorm, hit))
 			{
@@ -182,7 +182,7 @@ int BezierPath::GetNumSegments()
 
 bool BezierPath::RaycastPoints(RaycastHit& hit, std::vector<vec3*>& selectedPoints)
 {
-	vec3 rayPos = Camera::main.position;
+	vec3 rayPos = Camera::main->transform->position;
 	vec3 rayDir = Physics::GetRayFromMouse();
 	//LineUtil::DrawRay(vec3(0.0f, 0.0f, 2.0f), rayDir * 5.0f);
 	RaycastHit hit1, hit2, hit3, hit4;

@@ -29,10 +29,10 @@ public:
 
 private:
 	Model* pointModel;
-	float lodMinCurvature = 0.1f; // Min curvature for low level of detail
-	float lodMinTwist = 0.5f;
-	float lodMaxCurvature = 0.8f; // Min curvature for max level of detail
-	float lodMaxTwist = 1.5f;
+	float lodMinCurvature = 0.04f; // Min curvature for low level of detail
+	float lodMaxCurvature = 0.8f; // Min curvature for high level of detail
+	float lodMinTwist = 0.4f; // Min twist (in radians) for low level of detail
+	float lodMaxTwist = 1.5f; // Max twist (in radians) for high level of detail
 
 	int GetNumSegments(float curveLength);
 };

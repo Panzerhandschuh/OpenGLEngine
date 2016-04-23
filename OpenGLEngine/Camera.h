@@ -6,22 +6,24 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "InputManager.h"
 #include "Engine.h"
+#include "Component.h"
+#include "Transform.h"
 
-class Camera
+class Camera : public Component
 {
 public:
-	static Camera main;
+	static Camera* main;
 
 	GLfloat sensitivity = 0.125f;
 	GLfloat speed = 15.0f;
 	GLfloat fastSpeed = 45.0f;
-	glm::vec3 position;
 	glm::mat4 view;
 	glm::mat4 proj;
 
-	Camera();
+	void Start();
 	void Update(GLfloat deltaTime);
-	void LookAt(const glm::vec3& target);
+	//void LookAt(const glm::vec3& target);
+	glm::mat4 GetView();
 	glm::vec3 GetRight();
 	glm::vec3 GetUp();
 	glm::vec3 GetForward();

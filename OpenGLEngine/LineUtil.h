@@ -5,13 +5,11 @@
 #include "Shader.h"
 #include "Camera.h"
 
-using namespace glm;
-
 class LineUtil
 {
 public:
-	static void DrawRay(vec3 pos, vec3 dir, vec3 color = vec3(1.0f, 1.0f, 1.0f));
-	static void DrawLine(vec3 v1, vec3 v2, vec3 color = vec3(1.0f, 1.0f, 1.0f));
+	static void DrawRay(glm::vec3 pos, glm::vec3 dir, glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f));
+	static void DrawLine(glm::vec3 v1, glm::vec3 v2, glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f));
 };
 
 #endif

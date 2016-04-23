@@ -34,7 +34,7 @@ void PathPointShapes::DeformPath()
 
 	PathShape pathShape = shapes[0];
 	Shape shape = pathShape.shape;
-	BezierCurve curve(transform->position, endHandle->position, next->startHandle->position, next->transform->position);
+	BezierCurve curve = GetCurve();
 
 	int pathLoops = 24;
 	int pathSegments = pathLoops - 1;

@@ -1,9 +1,9 @@
 #ifndef PATHPOINT_H
 #define PATHPOINT_H
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/rotate_vector.hpp>
+#include <glm\glm.hpp>
+#include <glm\gtc\matrix_transform.hpp>
+#include <glm\gtx\rotate_vector.hpp>
 #include "Component.h"
 #include "Transform.h"
 #include "BezierCurve.h"
@@ -37,6 +37,10 @@ public:
 	bool IsEnd();
 	bool IsIntermediate();
 	glm::vec3 GetDirection();
+	glm::vec3 GetPoint(BezierCurve& curve, float t);
+	glm::mat4 GetRotation(BezierCurve& curve, float t);
+
+	BezierCurve GetCurve();
 
 private:
 	Model* pointModel;

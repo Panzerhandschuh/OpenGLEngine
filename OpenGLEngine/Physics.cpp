@@ -20,11 +20,11 @@ vec3 Physics::GetRayFromMouse()
 	vec4 rayClip = vec4(rayScreen.x, rayScreen.y, -1.0, 1.0);
 
 	// Eye space
-	vec4 rayEye = inverse(Camera::main.proj) * rayClip;
+	vec4 rayEye = inverse(Camera::main->proj) * rayClip;
 	rayEye = vec4(rayEye.x, rayEye.y, -1.0f, 0.0f);
 
 	// World space
-	vec3 rayWorld = vec3(inverse(Camera::main.view) * rayEye);
+	vec3 rayWorld = vec3(inverse(Camera::main->GetView()) * rayEye);
 	return normalize(rayWorld);
 }
 

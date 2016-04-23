@@ -18,9 +18,9 @@ public:
 	std::vector<Mesh*> meshes;
 
 	Model() { }
-	Model(std::string path);
+	Model(const std::string& path);
 	~Model();
-	void LoadModel(std::string path);
+	void LoadModel(const std::string& path);
 	Mesh* AddMesh();
 	void Draw();
 

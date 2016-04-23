@@ -6,7 +6,6 @@ using namespace glm;
 BezierCurve::BezierCurve(vec3 p0, vec3 p1, vec3 p2, vec3 p3)
 {
 	SetControlPoints(p0, p1, p2, p3);
-	CalcLength();
 }
 
 void BezierCurve::SetControlPoints(vec3 p0, vec3 p1, vec3 p2, vec3 p3)
@@ -15,6 +14,8 @@ void BezierCurve::SetControlPoints(vec3 p0, vec3 p1, vec3 p2, vec3 p3)
 	this->p1 = p1;
 	this->p2 = p2;
 	this->p3 = p3;
+
+	CalcLength();
 }
 
 vec3 BezierCurve::GetPoint(float t)

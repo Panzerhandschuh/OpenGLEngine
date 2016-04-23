@@ -46,7 +46,7 @@ void PathPointMesh::DeformPath()
 	if (!next)
 		return;
 
-	BezierCurve curve(transform->position, endHandle->position, next->startHandle->position, next->transform->position);
+	BezierCurve curve = GetCurve();
 	//float dist = length(next->transform->position - transform->position);
 	//vec3 p1 = transform->position + transform->GetForward() * dist * 0.39f;
 	//vec3 p2 = next->transform->position + -next->transform->GetForward() * dist * 0.39f;
@@ -58,7 +58,7 @@ void PathPointMesh::DeformPath()
 	float curvature = curve.GetMaxCurvature();
 	//cout << "Max Curvature: " << curve.GetMaxCurvature() << endl;
 	float angleDelta = fabs(next->angle - angle);
-	cout << "Angle Delta: " << angleDelta << endl;
+	//cout << "Angle Delta: " << angleDelta << endl;
 	if (curvature <= lodMinCurvature && angleDelta <= lodMinTwist)
 	{
 		sourceMesh = lodMin->meshes[0];
@@ -128,7 +128,7 @@ void PathPointMesh::DeformPath()
 			indices[currentIndex] = sourceIndices[i] + (segment * sourceVerts.size());
 		}
 
-		for (int i = 0; i < (*crossSections).size(); i++)
+		for (int i = 0; i < crossSections->size(); i++)
 		{
 			float tCrossSection = (*crossSections)[i].tValue;
 			float tNormalized = ((tCrossSection + segment) / numSegments);
@@ -140,18 +140,19 @@ void PathPointMesh::DeformPath()
 			if (segment == 0 || i != 0) // Don't recalc the point or rotation for the first cross section of a new segment since it uses the same values as the previous cross section
 			{
 				// Get position and rotation on the bezier curve for this cross section
-				point = curve.GetPoint(tLength);
-				vec3 tang = normalize(curve.Derivative(tLength));
-				quat sRot = slerp(startRot, endRot, smoothstep(0.0f, 1.0f, tLength));
-
-				vec3 up = QuaternionUtil::GetUp(sRot);
-				vec3 biNormal = normalize(cross(up, tang));
-				vec3 norm = normalize(cross(tang, biNormal));
-
-				rotation = mat4(biNormal.x, biNormal.y, biNormal.z, 0.0f,
-					norm.x, norm.y, norm.z, 0.0f,
-					tang.x, tang.y, tang.z, 0.0f,
-					0.0f, 0.0f, 0.0f, 1.0f);
+				point = GetPoint(curve, tLength);
+				rotation = GetRotation(curve, tLength);
+				//vec3 tang = normalize(curve.Derivative(tLength));
+				//quat sRot = slerp(startRot, endRot, smoothstep(0.0f, 1.0f, tLength));
+				//
+				//vec3 up = QuaternionUtil::GetUp(sRot);
+				//vec3 biNormal = normalize(cross(up, tang));
+				//vec3 norm = normalize(cross(tang, biNormal));
+				//
+				//rotation = mat4(biNormal.x, biNormal.y, biNormal.z, 0.0f,
+				//	norm.x, norm.y, norm.z, 0.0f,
+				//	tang.x, tang.y, tang.z, 0.0f,
+				//	0.0f, 0.0f, 0.0f, 1.0f);
 			}
 
 			vector<int>& indices = (*crossSections)[i].indices;
