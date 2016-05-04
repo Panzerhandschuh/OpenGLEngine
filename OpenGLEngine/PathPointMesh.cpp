@@ -95,7 +95,7 @@ void PathPointMesh::DeformPath()
 	vector<GLuint> indices(sourceIndices.size() * numSegments);
 
 	vec3 point;
-	mat4 rotation;
+	mat3 rotation;
 	//quat rotation;
 	quat startRot = angleAxis(angle, GetDirection());
 	quat endRot = angleAxis(next->angle, next->GetDirection());
@@ -133,15 +133,15 @@ void PathPointMesh::DeformPath()
 			float tCrossSection = (*crossSections)[i].tValue;
 			float tNormalized = ((tCrossSection + segment) / numSegments);
 			float tLength = curve.GetLengthParameter(tNormalized);
-			//float tValue = (InputManager::GetKey(GLFW_KEY_N)) ? tNormalized : tLength;
+			float tValue = (InputManager::GetKey(GLFW_KEY_N)) ? tNormalized : tLength;
 			//cout << "tNormalized:\t\t" << tNormalized << endl;
 			//cout << "tLength:\t\t" << tLength << endl;
 
 			if (segment == 0 || i != 0) // Don't recalc the point or rotation for the first cross section of a new segment since it uses the same values as the previous cross section
 			{
 				// Get position and rotation on the bezier curve for this cross section
-				point = GetPoint(curve, tLength);
-				rotation = GetRotation(curve, tLength);
+				point = GetPoint(curve, tValue);
+				rotation = GetRotation(curve, tValue);
 				//vec3 tang = normalize(curve.Derivative(tLength));
 				//quat sRot = slerp(startRot, endRot, smoothstep(0.0f, 1.0f, tLength));
 				//
@@ -163,12 +163,12 @@ void PathPointMesh::DeformPath()
 				int currentIndex = index + (segment * sourceVerts.size());
 
 				// Rotate normal
-				normals[currentIndex] = (vec3)(rotation * vec4(sourceNorms[index], 0.0f));
+				normals[currentIndex] = rotation * sourceNorms[index];
 
 				// Position and rotate vertex
 				vec3 vNew = sourceVerts[index]; // Create a temporary vector for rotating and positioning the transformed vertex
 				vNew[DEFORM_AXIS] = 0.0f; // Set deform axis coordinate to 0 so the vertex is rotated relative to the curve
-				vNew = point + (vec3)(rotation * vec4(vNew, 0.0f));
+				vNew = point + (rotation * vNew);
 				vertices[currentIndex] = vNew;
 			}
 		}

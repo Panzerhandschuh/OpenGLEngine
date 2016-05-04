@@ -111,7 +111,7 @@ glm::vec3 PathPoint::GetPoint(BezierCurve& curve, float t)
 	return curve.GetPoint(t);
 }
 
-glm::mat4 PathPoint::GetRotation(BezierCurve& curve, float t)
+glm::mat3 PathPoint::GetRotation(BezierCurve& curve, float t)
 {
 	vec3 tang = normalize(curve.Derivative(t));
 	quat startRot = angleAxis(angle, GetDirection());
@@ -122,10 +122,9 @@ glm::mat4 PathPoint::GetRotation(BezierCurve& curve, float t)
 	vec3 biNormal = normalize(cross(up, tang));
 	vec3 norm = normalize(cross(tang, biNormal));
 
-	return mat4(biNormal.x, biNormal.y, biNormal.z, 0.0f,
-		norm.x, norm.y, norm.z, 0.0f,
-		tang.x, tang.y, tang.z, 0.0f,
-		0.0f, 0.0f, 0.0f, 1.0f);
+	return mat3(biNormal.x, biNormal.y, biNormal.z,
+		norm.x, norm.y, norm.z,
+		tang.x, tang.y, tang.z);
 }
 
 BezierCurve PathPoint::GetCurve()
